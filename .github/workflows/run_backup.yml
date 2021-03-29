@@ -26,7 +26,7 @@ jobs:
 
       - name: Generate backup
         id: build-image
-        uses: public.ecr.aws/d4w2c1x5/mongodb-awesome-backup:latest
+        runs-on: public.ecr.aws/d4w2c1x5/mongodb-awesome-backup:latest
         run: |
           ls
           pwd
