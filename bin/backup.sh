@@ -64,10 +64,15 @@ echo "dump MongoDB to the local filesystem..."
 mongodump -o ${TARGET} ${MONGODUMP_OPTS}
 
 # CSV Export
-mongoexport -o ${TARGET}.incidents.csv ${MONGODUMP_OPTS} -v --type=csv --collection=incidents --fields=authors,source_domain,title,url,incident_id,ref_number,date_downloaded,date_modified,date_published,incident_date,submitters,date_submitted,report_number,epoch_date_downloaded,epoch_date_modified,epoch_date_published,epoch_date_submitted,epoch_incident_date,text
-mongoexport -o ${TARGET}.duplicates.csv ${MONGODUMP_OPTS} -v --type=csv --collection=duplicates --fields=duplicate_incident_number,true_incident_number
-mongoexport -o ${TARGET}.quickadd.csv ${MONGODUMP_OPTS} -v --type=csv --collection=quickadd --fields=incident_id,url,date_submitted,source_domain
-mongoexport -o ${TARGET}.submissions.csv ${MONGODUMP_OPTS} -v --type=csv --collection=submissions --fields=authors,date_downloaded,date_modified,date_published,date_submitted,image_url,incident_date,incident_id,language,mongodb_id,source_domain,submitters,text,title,url
+echo "dumping collections as CSV files..."
+mongoexport -o ${TARGET}/incidents.csv ${MONGODUMP_OPTS} -v --type=csv --collection=incidents --fields=authors,source_domain,title,url,incident_id,ref_number,date_downloaded,date_modified,date_published,incident_date,submitters,date_submitted,report_number,epoch_date_downloaded,epoch_date_modified,epoch_date_published,epoch_date_submitted,epoch_incident_date,text
+mongoexport -o ${TARGET}/duplicates.csv ${MONGODUMP_OPTS} -v --type=csv --collection=duplicates --fields=duplicate_incident_number,true_incident_number
+mongoexport -o ${TARGET}/quickadd.csv ${MONGODUMP_OPTS} -v --type=csv --collection=quickadd --fields=incident_id,url,date_submitted,source_domain
+mongoexport -o ${TARGET}/submissions.csv ${MONGODUMP_OPTS} -v --type=csv --collection=submissions --fields=authors,date_downloaded,date_modified,date_published,date_submitted,image_url,incident_date,incident_id,language,mongodb_id,source_domain,submitters,text,title,url
+
+ls -lah
+echo "---"
+ls -lah ${TARGET}
 
 # run tar command
 echo "backup ${TARGET}..."
