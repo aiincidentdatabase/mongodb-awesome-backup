@@ -34,11 +34,11 @@ jobs:
             -e AWS_SECRET_ACCESS_KEY="${{ secrets.AWS_SECRET_ACCESS_KEY }}" \
             -e TARGET_BUCKET_URL="s3://aiid-backups-public" \
             -e BACKUPFILE_PREFIX="backup" \
-            -e MONGODB_URI="mongodb+srv://readonlyuser:EScmnlEQHM1pWwWM@aiiddev-aqdmh.gcp.mongodb.net/AIIDDev" \
+            -e MONGODB_URI="mongodb+srv://${{ secrets.MONGO_BACKUP_USER }}:${{ secrets.MONGO_BACKUP_USER_PASSWORD }}@aiiddev-aqdmh.gcp.mongodb.net/aiidprod" \
             -e MONGODB_HOST="mongo" \
-            -e MONGODB_DBNAME="AIIDDev" \
-            -e MONGODB_USERNAME="readonlyuser" \
-            -e MONGODB_PASSWORD="EScmnlEQHM1pWwWM" \
+            -e MONGODB_DBNAME="aiidprod" \
+            -e MONGODB_USERNAME="${{ secrets.MONGO_BACKUP_USER }}" \
+            -e MONGODB_PASSWORD="${{ secrets.MONGO_BACKUP_USER_PASSWORD }}" \
             -e MONGODB_AUTHDB="admin" \
             -e AWSCLI_ENDPOINT_OPT="s3://aiid-backups-public" \
             -v ~:/mab \
