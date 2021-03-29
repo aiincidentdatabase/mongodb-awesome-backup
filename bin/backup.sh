@@ -68,6 +68,8 @@ mongodump -o ${TARGET} ${MONGODUMP_OPTS}
 echo "........"
 
 ls -lah
+echo "++++++++"
+ls -lah /tmp
 echo ${TAR_CMD}
 echo ${TAR_OPTS}
 echo ${TARBALL_FULLPATH}
