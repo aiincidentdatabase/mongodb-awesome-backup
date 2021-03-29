@@ -61,7 +61,16 @@ else
   MONGODUMP_OPTS="-h ${MONGODB_HOST} ${MONGODUMP_OPTS}"
 fi
 echo "dump MongoDB..."
+echo ${TARGET}
+echo ${MONGODUMP_OPTS}
 mongodump -o ${TARGET} ${MONGODUMP_OPTS}
+
+ls -lah
+echo ${TAR_CMD}
+echo ${TAR_OPTS}
+echo ${TARBALL_FULLPATH}
+echo ${DIRNAME}
+echo ${BASENAME}
 
 # run tar command
 echo "backup ${TARGET}..."
