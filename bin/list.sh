@@ -19,4 +19,3 @@ elif [ `echo $TARGET_BUCKET_URL | cut -f1 -d":"` == "gs" ]; then
   echo "There are files below in GS bucket:"
   gs_list_files ${TARGET_BUCKET_URL}
 fi
-
