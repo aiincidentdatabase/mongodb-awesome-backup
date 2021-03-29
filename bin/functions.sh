@@ -58,13 +58,6 @@ gs_delete_file() {
 #            1. source s3 url (s3://...)
 #            2. target s3 url (s3://...)
 s3_copy_file() {
-	echo "><<><><><><><><><><><><><>"
-	echo ${AWSCLI}
-	echo ${AWSCLI_ENDPOINT_OPT}
-	echo ${AWSCLIOPT}
-	echo ${AWSCLI_COPY_OPT}
-	echo $1
-	echo $2
 	echo ${AWSCLI} ${AWSCLI_ENDPOINT_OPT} ${AWSCLIOPT} ${AWSCLI_COPY_OPT} $1 $2
 	if [ $# -ne 2 ]; then return 255; fi
 	${AWSCLI} ${AWSCLI_ENDPOINT_OPT} ${AWSCLIOPT} ${AWSCLI_COPY_OPT} $1 $2
