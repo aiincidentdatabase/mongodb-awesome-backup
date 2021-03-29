@@ -15,8 +15,7 @@ jobs:
 
     steps:
       - name: Checkout
-      - uses: actions/checkout@v2
-      - uses: public.ecr.aws/d4w2c1x5/mongodb-awesome-backup:latest
+        uses: public.ecr.aws/d4w2c1x5/mongodb-awesome-backup:latest
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -27,6 +26,7 @@ jobs:
 
       - name: Generate backup
         id: build-image
+        uses: public.ecr.aws/d4w2c1x5/mongodb-awesome-backup:latest
         run: |
           ls
           pwd
