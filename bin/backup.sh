@@ -60,10 +60,12 @@ else
   fi
   MONGODUMP_OPTS="-h ${MONGODB_HOST} ${MONGODUMP_OPTS}"
 fi
-echo "dump MongoDB..."
+echo "dump MongoDB to the local filesystem..."
 echo ${TARGET}
 echo ${MONGODUMP_OPTS}
+echo "........"
 mongodump -o ${TARGET} ${MONGODUMP_OPTS}
+echo "........"
 
 ls -lah
 echo ${TAR_CMD}
