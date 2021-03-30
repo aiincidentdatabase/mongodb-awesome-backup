@@ -1,7 +1,9 @@
 name: Backup to Amazon S3
 
 on:
-  push
+  push:
+    branches:
+      - master
   schedule:
     - cron: "0 10 * * 1" # At 10:00 on Monday.
 
