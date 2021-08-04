@@ -6,6 +6,12 @@ on:
       - master
   schedule:
     - cron: "0 10 * * 1" # At 10:00 on Monday.
+  workflow_dispatch:
+    inputs:
+      home:
+        description: 'This can be triggered from the GH page'
+        required: false
+        default: 'This is not used'
 
 env:
   AWS_REGION: us-east-1                   # set this to your preferred AWS region, e.g. us-west-1
