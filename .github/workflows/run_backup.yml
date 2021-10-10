@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - master
+      - staging
+      - classifications-csv
   schedule:
     - cron: "0 10 * * 1" # At 10:00 on Monday.
   workflow_dispatch:
