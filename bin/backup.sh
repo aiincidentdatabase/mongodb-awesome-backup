@@ -65,7 +65,7 @@ mongodump -o ${TARGET} ${MONGODUMP_OPTS}
 
 # CSV Export
 echo "dumping collections as CSV files..."
-mongoexport -o ${TARGET}/incidents.csv ${MONGODUMP_OPTS} -v --type=csv --collection=incidents --fields=_id,incident_id,date,reports,Alleged deployer of AI system,Alleged developer of AI system,Alleged harmed or nearly harmed parties,description,title
+mongoexport -o ${TARGET}/incidents.csv ${MONGODUMP_OPTS} -v --type=csv --collection=incidents --fields=_id,incident_id,date,reports,Alleged\ deployer\ of\ AI\ system,Alleged\ developer\ of\ AI\ system,Alleged\ harmed\ or\ nearly\ harmed\ parties,description,title
 mongoexport -o ${TARGET}/duplicates.csv ${MONGODUMP_OPTS} -v --type=csv --collection=duplicates --fields=duplicate_incident_number,true_incident_number
 mongoexport -o ${TARGET}/quickadd.csv ${MONGODUMP_OPTS} -v --type=csv --collection=quickadd --fields=incident_id,url,date_submitted,source_domain
 mongoexport -o ${TARGET}/submissions.csv ${MONGODUMP_OPTS} -v --type=csv --collection=submissions --fields=authors,date_downloaded,date_modified,date_published,date_submitted,image_url,incident_date,incident_id,language,mongodb_id,source_domain,submitters,text,title,url
