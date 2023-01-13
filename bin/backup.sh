@@ -61,7 +61,7 @@ mongoexport -o ${TARGET}/reports.csv ${MONGODUMP_OPTS} -v --type=csv --collectio
 
 MONGODUMP_OPTS_TRANSLATIONS="--uri=${MONGODB_URI_TRANSLATIONS}"
 echo "dump MongoDB translations to the local filesystem..."
-mongodump -o ${TARGET} MONGODUMP_OPTS_TRANSLATIONS
+mongodump -o ${TARGET} ${MONGODUMP_OPTS_TRANSLATIONS}
 
 echo "Report contents are subject to their own intellectual property rights. Unless otherwise noted, the database is shared under (CC BY-SA 4.0). See: https://creativecommons.org/licenses/by-sa/4.0/" > ${TARGET}/license.txt
 
