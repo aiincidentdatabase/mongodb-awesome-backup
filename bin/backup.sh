@@ -45,22 +45,9 @@ if [ "x${TARGET_BUCKET_URL}" == "x" ]; then
   exit 1
 fi
 
-# dump database
-if [ "x${MONGODB_URI}" != "x" ]; then
-  MONGODUMP_OPTS="--uri=${MONGODB_URI} ${MONGODUMP_OPTS}"
-else
-  if [ "x${MONGODB_DBNAME}" != "x" ]; then
-    MONGODUMP_OPTS="${MONGODUMP_OPTS} -d ${MONGODB_DBNAME}"
-  fi
-  if [ "x${MONGODB_USERNAME}" != "x" ]; then
-    MONGODUMP_OPTS="${MONGODUMP_OPTS} -u ${MONGODB_USERNAME} -p ${MONGODB_PASSWORD}"
-  fi
-  if [ "x${MONGODB_AUTHDB}" != "x" ]; then
-    MONGODUMP_OPTS="${MONGODUMP_OPTS} --authenticationDatabase ${MONGODB_AUTHDB}"
-  fi
-  MONGODUMP_OPTS="-h ${MONGODB_HOST} ${MONGODUMP_OPTS}"
-fi
-echo "dump MongoDB to the local filesystem..."
+# dump databases
+MONGODUMP_OPTS="--uri=${MONGODB_URI} ${MONGODUMP_OPTS}"
+echo "dump MongoDB aiidprod to the local filesystem..."
 mongodump -o ${TARGET} ${MONGODUMP_OPTS}
 
 # CSV Export
@@ -71,6 +58,10 @@ mongoexport -o ${TARGET}/quickadd.csv ${MONGODUMP_OPTS} -v --type=csv --collecti
 mongoexport -o ${TARGET}/submissions.csv ${MONGODUMP_OPTS} -v --type=csv --collection=submissions --fields=authors,date_downloaded,date_modified,date_published,date_submitted,image_url,incident_date,incident_id,language,mongodb_id,source_domain,submitters,text,title,url
 mongoexport -o ${TARGET}/classifications_cset.csv ${MONGODUMP_OPTS} -v --type=csv --collection=classifications --fields='incident_id,namespace,classifications.Annotator,classifications.Annotation Status,classifications.Reviewer,classifications.Quality Control,classifications.Full Description,classifications.Short Description,classifications.Beginning Date,classifications.Ending Date,classifications.Location,classifications.Near Miss,classifications.Named Entities,classifications.Technology Purveyor,classifications.Intent,classifications.Severity,classifications.Lives Lost,classifications.Harm Distribution Basis,classifications.Harm Type,classifications.Infrastructure Sectors,classifications.Financial Cost,classifications.Laws Implicated,classifications.AI System Description,classifications.Data Inputs,classifications.System Developer,classifications.Sector of Deployment,classifications.Public Sector Deployment,classifications.Nature of End User,classifications.Level of Autonomy,classifications.Relevant AI functions,classifications.AI Techniques,classifications.AI Applications,classifications.Physical System,classifications.Problem Nature,classifications.Publish'
 mongoexport -o ${TARGET}/reports.csv ${MONGODUMP_OPTS} -v --type=csv --collection=reports --fields=_id,incident_id,authors,date_downloaded,date_modified,date_published,date_submitted,description,epoch_date_downloaded,epoch_date_modified,epoch_date_published,epoch_date_submitted,image_url,language,ref_number,report_number,source_domain,submitters,text,title,url,tags
+
+MONGODUMP_OPTS_TRANSLATIONS="--uri=${MONGODB_URI_TRANSLATIONS}"
+echo "dump MongoDB translations to the local filesystem..."
+mongodump -o ${TARGET} MONGODUMP_OPTS_TRANSLATIONS
 
 echo "Report contents are subject to their own intellectual property rights. Unless otherwise noted, the database is shared under (CC BY-SA 4.0). See: https://creativecommons.org/licenses/by-sa/4.0/" > ${TARGET}/license.txt
 
