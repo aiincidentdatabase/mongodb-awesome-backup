@@ -56,9 +56,37 @@ mongoexport -o ${TARGET}/incidents.csv ${MONGODUMP_OPTS} -v --type=csv --collect
 mongoexport -o ${TARGET}/duplicates.csv ${MONGODUMP_OPTS} -v --type=csv --collection=duplicates --fields=duplicate_incident_number,true_incident_number
 mongoexport -o ${TARGET}/quickadd.csv ${MONGODUMP_OPTS} -v --type=csv --collection=quickadd --fields=incident_id,url,date_submitted,source_domain
 mongoexport -o ${TARGET}/submissions.csv ${MONGODUMP_OPTS} -v --type=csv --collection=submissions --fields=authors,date_downloaded,date_modified,date_published,date_submitted,image_url,incident_date,incident_id,language,mongodb_id,source_domain,submitters,text,title,url
-mongoexport -o ${TARGET}/classifications_cset.csv ${MONGODUMP_OPTS} -v --type=csv --collection=classifications --fields='incident_id,namespace,classifications.Annotator,classifications.Annotation Status,classifications.Reviewer,classifications.Quality Control,classifications.Full Description,classifications.Short Description,classifications.Beginning Date,classifications.Ending Date,classifications.Location,classifications.Near Miss,classifications.Named Entities,classifications.Technology Purveyor,classifications.Intent,classifications.Severity,classifications.Lives Lost,classifications.Harm Distribution Basis,classifications.Harm Type,classifications.Infrastructure Sectors,classifications.Financial Cost,classifications.Laws Implicated,classifications.AI System Description,classifications.Data Inputs,classifications.System Developer,classifications.Sector of Deployment,classifications.Public Sector Deployment,classifications.Nature of End User,classifications.Level of Autonomy,classifications.Relevant AI functions,classifications.AI Techniques,classifications.AI Applications,classifications.Physical System,classifications.Problem Nature,classifications.Publish'
 mongoexport -o ${TARGET}/reports.csv ${MONGODUMP_OPTS} -v --type=csv --collection=reports --fields=_id,incident_id,authors,date_downloaded,date_modified,date_published,date_submitted,description,epoch_date_downloaded,epoch_date_modified,epoch_date_published,epoch_date_submitted,image_url,language,ref_number,report_number,source_domain,submitters,text,title,url,tags
 
+# Taxa CSV Export
+
+# Get the field names
+mongoexport -o classifications_cset_headers.csv ${MONGODUMP_OPTS} -v --type=csv --query='{ "namespace": "CSET"}' --collection=classifications --fields='attributes.0.short_name,attributes.1.short_name,attributes.2.short_name,attributes.3.short_name,attributes.4.short_name,attributes.5.short_name,attributes.6.short_name,attributes.7.short_name,attributes.8.short_name,attributes.9.short_name,attributes.10.short_name,attributes.11.short_name,attributes.12.short_name,attributes.13.short_name,attributes.14.short_name,attributes.15.short_name,attributes.16.short_name,attributes.17.short_name,attributes.18.short_name,attributes.19.short_name,attributes.20.short_name,attributes.21.short_name,attributes.22.short_name,attributes.23.short_name,attributes.24.short_name,attributes.25.short_name,attributes.26.short_name,attributes.27.short_name,attributes.28.short_name,attributes.29.short_name,attributes.30.short_name,attributes.31.short_name'
+
+# Get the values
+mongoexport -o classifications_cset_values.csv ${MONGODUMP_OPTS} -v --query='{ "namespace": "CSET"}' --type=csv --collection=classifications --fields='_id,incident_id,namespace,publish,attributes.0.value_json,attributes.1.value_json,attributes.2.value_json,attributes.3.value_json,attributes.4.value_json,attributes.5.value_json,attributes.6.value_json,attributes.7.value_json,attributes.8.value_json,attributes.9.value_json,attributes.10.value_json,attributes.11.value_json,attributes.12.value_json,attributes.13.value_json,attributes.14.value_json,attributes.15.value_json,attributes.16.value_json,attributes.17.value_json,attributes.18.value_json,attributes.19.value_json,attributes.20.value_json,attributes.21.value_json,attributes.22.value_json,attributes.23.value_json,attributes.24.value_json,attributes.25.value_json,attributes.26.value_json,attributes.27.value_json,attributes.28.value_json,attributes.29.value_json,attributes.30.value_json,attributes.31.value_json'
+
+# Construct the header
+echo -n "_id,incident_id,namespace,publish," > tmp.csv
+head -n 1 classifications_cset_headers.csv > tmp_header.csv
+cat tmp.csv tmp_header.csv > header.csv
+
+# Concat the header and the values to the output
+cat header.csv classifications_cset_values.csv > ${TARGET}/classifications_cset.csv
+
+# Cleanup
+rm tmp.csv
+rm tmp_header.csv
+rm header.csv
+rm classifications_cset_headers.csv
+rm classifications_cset_values.csv
+
+
+
+
+
+
+# Translations Export
 MONGODUMP_OPTS_TRANSLATIONS="--uri=${MONGODB_URI_TRANSLATIONS}"
 echo "dump MongoDB translations to the local filesystem..."
 mongodump -o ${TARGET} ${MONGODUMP_OPTS_TRANSLATIONS}
