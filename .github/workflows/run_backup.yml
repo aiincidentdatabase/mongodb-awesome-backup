@@ -45,7 +45,7 @@ jobs:
           docker run --rm \
             -e AWS_ACCESS_KEY_ID="${{ secrets.AWS_S3_BACKUP_USER_ACCESS_KEY_ID }}" \
             -e AWS_SECRET_ACCESS_KEY="${{ secrets.AWS_S3_BACKUP_USER_SECRET_ACCESS_KEY }}" \
-            -e TARGET_BUCKET_URL="s3://aiid-backups-public/" \
+            -e TARGET_BUCKET_URL="s3://aiid-test/" \
             -e BACKUPFILE_PREFIX="backup" \
             -e MONGODB_HOST="mongo" \
             -e MONGODB_URI="mongodb+srv://${{ secrets.MONGO_BACKUP_USER }}:${{ secrets.MONGO_BACKUP_USER_PASSWORD }}@aiiddev-aqdmh.gcp.mongodb.net/aiidprod" \
