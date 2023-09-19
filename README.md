@@ -22,7 +22,8 @@ Note that either AWS_ or GCP_ vars are required not both.
 docker run --rm \
   -e AWS_ACCESS_KEY_ID=<Your IAM Access Key ID> \
   -e AWS_SECRET_ACCESS_KEY=<Your IAM Secret Access Key> \
-  -e TARGET_BUCKET_URL=<Target Bucket URL ([s3://...|gs://...])> \
+  -e TARGET_PRIVATE_BUCKET_URL=<Target public Bucket URL ([s3://...|gs://...])> \
+  -e TARGET_PUBLIC_BUCKET_URL=<Target private Bucket URL ([s3://...|gs://...])> \
   [ -e BACKUPFILE_PREFIX=<Prefix of Backup Filename (default: "backup") \ ]
   [ -e MONGODB_URI=<Target MongoDB URI> \ ]
   [ -e MONGODB_HOST=<Target MongoDB Host (default: "mongo")> \ ]
@@ -49,7 +50,8 @@ Environment variables
 | --------------------- | ------------------------------------------------------------------------------ | ------- |
 | AWS_ACCESS_KEY_ID     | Your IAM Access Key ID                                                         | -       |
 | AWS_SECRET_ACCESS_KEY | Your IAM Secret Access Key                                                     | -       |
-| TARGET_BUCKET_URL     | Target Bucket URL ([s3://...\|gs://...]). **URL is needed to be end with '/'** | -       |
+| TARGET_PRIVATE_BUCKET_URL     | Target private Bucket URL ([s3://...\|gs://...]). **URL is needed to be end with '/'** | -       |
+| TARGET_PUBLIC_BUCKET_URL     | Target public Bucket URL ([s3://...\|gs://...]). **URL is needed to be end with '/'** | -       |
 
 #### Optional
 

@@ -13,7 +13,8 @@ CRONMODE=${CRONMODE:-false}
 #MONGODB_PASSWORD=
 #MONGODB_AUTHDB=
 #MONGODUMP_OPTS=
-#TARGET_PRIVATE_BUCKET_URL=[s3://... | gs://...] (must be ended with /)
+#TARGET_BUCKET_URL=[s3://... | gs://...] (must be ended with /)
+TARGET_BUCKET_URL=${TARGET_PRIVATE_BUCKET_URL}
 
 # start script
 CWD=`/usr/bin/dirname $0`
@@ -25,7 +26,7 @@ NOW=`create_current_yyyymmddhhmmss`
 echo "=== $0 started at `/bin/date "+%Y/%m/%d %H:%M:%S"` ==="
 
 TMPDIR="/tmp"
-TARGET_DIRNAME="mongodump"
+TARGET_DIRNAME="mongodump_snapshot"
 TARGET="${TMPDIR}/${TARGET_DIRNAME}"
 TAR_CMD="/bin/tar"
 TAR_OPTS="jcvf"
@@ -38,12 +39,12 @@ TARBALL_FULLPATH="${TMPDIR}/${TARBALL}"
 
 # check parameters
 # deprecate the old option
-if [ "x${S3_TARGET_PRIVATE_BUCKET_URL}" != "x" ]; then
-  echo "WARNING: The environment variable S3_TARGET_PRIVATE_BUCKET_URL is deprecated.  Please use TARGET_PRIVATE_BUCKET_URL instead."
-  TARGET_PRIVATE_BUCKET_URL=$S3_TARGET_PRIVATE_BUCKET_URL
+if [ "x${S3_TARGET_BUCKET_URL}" != "x" ]; then
+  echo "WARNING: The environment variable S3_TARGET_BUCKET_URL is deprecated.  Please use TARGET_BUCKET_URL instead."
+  TARGET_BUCKET_URL=$S3_TARGET_BUCKET_URL
 fi
-if [ "x${TARGET_PRIVATE_BUCKET_URL}" == "x" ]; then
-  echo "ERROR: The environment variable TARGET_PRIVATE_BUCKET_URL must be specified." 1>&2
+if [ "x${TARGET_BUCKET_URL}" == "x" ]; then
+  echo "ERROR: The environment variable TARGET_BUCKET_URL must be specified." 1>&2
   exit 1
 fi
 
@@ -64,14 +65,14 @@ echo "---"
 ls -lah ${TARGET}
 
 # run tar command
-echo "start backup ${TARGET} into ${TARGET_PRIVATE_BUCKET_URL} ..."
+echo "start backup ${TARGET} into ${TARGET_BUCKET_URL} ..."
 time ${TAR_CMD} ${TAR_OPTS} ${TARBALL_FULLPATH} -C ${DIRNAME} ${BASENAME}
 
-if [ `echo $TARGET_PRIVATE_BUCKET_URL | cut -f1 -d":"` == "s3" ]; then
+if [ `echo $TARGET_BUCKET_URL | cut -f1 -d":"` == "s3" ]; then
   # transfer tarball to Amazon S3
-  s3_copy_file ${TARBALL_FULLPATH} ${TARGET_PRIVATE_BUCKET_URL}
-elif [ `echo $TARGET_PRIVATE_BUCKET_URL | cut -f1 -d":"` == "gs" ]; then
-  gs_copy_file ${TARBALL_FULLPATH} ${TARGET_PRIVATE_BUCKET_URL}
+  s3_copy_file ${TARBALL_FULLPATH} ${TARGET_BUCKET_URL}
+elif [ `echo $TARGET_BUCKET_URL | cut -f1 -d":"` == "gs" ]; then
+  gs_copy_file ${TARBALL_FULLPATH} ${TARGET_BUCKET_URL}
 fi
 
 # call healthchecks url for successful backup
