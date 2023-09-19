@@ -26,7 +26,7 @@ NOW=`create_current_yyyymmddhhmmss`
 echo "=== $0 started at `/bin/date "+%Y/%m/%d %H:%M:%S"` ==="
 
 TMPDIR="/tmp"
-TARGET_DIRNAME="mongodump_snapshot"
+TARGET_DIRNAME="mongodump_full_snapshot"
 TARGET="${TMPDIR}/${TARGET_DIRNAME}"
 TAR_CMD="/bin/tar"
 TAR_OPTS="jcvf"
