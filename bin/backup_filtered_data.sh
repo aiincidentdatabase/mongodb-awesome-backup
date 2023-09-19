@@ -12,7 +12,6 @@ CRONMODE=${CRONMODE:-false}
 #MONGODB_USERNAME=
 #MONGODB_PASSWORD=
 #MONGODB_AUTHDB=
-#MONGODUMP_OPTS=
 #TARGET_BUCKET_URL=[s3://... | gs://...] (must be ended with /)
 TARGET_BUCKET_URL=${TARGET_PUBLIC_BUCKET_URL}
 
@@ -26,7 +25,7 @@ NOW=`create_current_yyyymmddhhmmss`
 echo "=== $0 started at `/bin/date "+%Y/%m/%d %H:%M:%S"` ==="
 
 TMPDIR="/tmp"
-TARGET_DIRNAME="mongodump_csv"
+TARGET_DIRNAME="mongodump_filtered_data"
 TARGET="${TMPDIR}/${TARGET_DIRNAME}"
 TAR_CMD="/bin/tar"
 TAR_OPTS="jcvf"
@@ -49,33 +48,30 @@ if [ "x${TARGET_BUCKET_URL}" == "x" ]; then
 fi
 
 # dump databases
-MONGODUMP_OPTS="--uri=${MONGODB_URI} ${MONGODUMP_OPTS}"
-echo "dump MongoDB aiidprod to the local filesystem..."
-mongodump -o ${TARGET} ${MONGODUMP_OPTS}
-# dump filtered "classifications" collection 
-MONGODUMP_OPTS="--collection=classifications --query='{ "publish": true }' ${MONGODUMP_OPTS}"
-mongodump -o ${TARGET} ${MONGODUMP_OPTS}
+echo "Dump MongoDB aiidprod..."
+mongodump -o ${TARGET} --uri=${MONGODB_URI} --excludeCollection=classifications 
+echo "Dump filtered 'classifications' collection..."
+mongodump -o ${TARGET} --uri=${MONGODB_URI} --collection=classifications --query='{ "publish": true }'
 
 # Dump Translations database
-MONGODUMP_OPTS_TRANSLATIONS="--uri=${MONGODB_URI_TRANSLATIONS}"
-echo "dump MongoDB translations to the local filesystem..."
-mongodump -o ${TARGET} ${MONGODUMP_OPTS_TRANSLATIONS}
+echo "Dump MongoDB translations..."
+mongodump -o ${TARGET} --uri=${MONGODB_URI_TRANSLATIONS}
 
 # CSV Export
-echo "dumping collections as CSV files..."
-mongoexport -o ${TARGET}/incidents.csv ${MONGODUMP_OPTS} -v --type=csv --collection=incidents --fields=_id,incident_id,date,reports,Alleged\ deployer\ of\ AI\ system,Alleged\ developer\ of\ AI\ system,Alleged\ harmed\ or\ nearly\ harmed\ parties,description,title
-mongoexport -o ${TARGET}/duplicates.csv ${MONGODUMP_OPTS} -v --type=csv --collection=duplicates --fields=duplicate_incident_number,true_incident_number
-mongoexport -o ${TARGET}/quickadd.csv ${MONGODUMP_OPTS} -v --type=csv --collection=quickadd --fields=incident_id,url,date_submitted,source_domain
-mongoexport -o ${TARGET}/submissions.csv ${MONGODUMP_OPTS} -v --type=csv --collection=submissions --fields=authors,date_downloaded,date_modified,date_published,date_submitted,image_url,incident_date,incident_id,language,mongodb_id,source_domain,submitters,text,title,url
-mongoexport -o ${TARGET}/reports.csv ${MONGODUMP_OPTS} -v --type=csv --collection=reports --fields=_id,incident_id,authors,date_downloaded,date_modified,date_published,date_submitted,description,epoch_date_downloaded,epoch_date_modified,epoch_date_published,epoch_date_submitted,image_url,language,ref_number,report_number,source_domain,submitters,text,title,url,tags
+echo "Export collections as CSV files..."
+mongoexport -o ${TARGET}/incidents.csv --uri=${MONGODB_URI} -v --type=csv --collection=incidents --fields=_id,incident_id,date,reports,Alleged\ deployer\ of\ AI\ system,Alleged\ developer\ of\ AI\ system,Alleged\ harmed\ or\ nearly\ harmed\ parties,description,title
+mongoexport -o ${TARGET}/duplicates.csv --uri=${MONGODB_URI} -v --type=csv --collection=duplicates --fields=duplicate_incident_number,true_incident_number
+mongoexport -o ${TARGET}/quickadd.csv --uri=${MONGODB_URI} -v --type=csv --collection=quickadd --fields=incident_id,url,date_submitted,source_domain
+mongoexport -o ${TARGET}/submissions.csv --uri=${MONGODB_URI} -v --type=csv --collection=submissions --fields=authors,date_downloaded,date_modified,date_published,date_submitted,image_url,incident_date,incident_id,language,mongodb_id,source_domain,submitters,text,title,url
+mongoexport -o ${TARGET}/reports.csv --uri=${MONGODB_URI} -v --type=csv --collection=reports --fields=_id,incident_id,authors,date_downloaded,date_modified,date_published,date_submitted,description,epoch_date_downloaded,epoch_date_modified,epoch_date_published,epoch_date_submitted,image_url,language,ref_number,report_number,source_domain,submitters,text,title,url,tags
 
 # Taxa CSV Export
 
 # Get the field names
-mongoexport -o classifications_cset_headers.csv ${MONGODUMP_OPTS} -v --type=csv --query='{ "namespace": "CSET", "publish": true }' --collection=classifications --noHeaderLine --fields='attributes.0.short_name,attributes.1.short_name,attributes.2.short_name,attributes.3.short_name,attributes.4.short_name,attributes.5.short_name,attributes.6.short_name,attributes.7.short_name,attributes.8.short_name,attributes.9.short_name,attributes.10.short_name,attributes.11.short_name,attributes.12.short_name,attributes.13.short_name,attributes.14.short_name,attributes.15.short_name,attributes.16.short_name,attributes.17.short_name,attributes.18.short_name,attributes.19.short_name,attributes.20.short_name,attributes.21.short_name,attributes.22.short_name,attributes.23.short_name,attributes.24.short_name,attributes.25.short_name,attributes.26.short_name,attributes.27.short_name,attributes.28.short_name,attributes.29.short_name,attributes.30.short_name,attributes.31.short_name'
+mongoexport -o classifications_cset_headers.csv --uri=${MONGODB_URI} -v --type=csv --query='{ "namespace": "CSET", "publish": true }' --collection=classifications --noHeaderLine --fields='attributes.0.short_name,attributes.1.short_name,attributes.2.short_name,attributes.3.short_name,attributes.4.short_name,attributes.5.short_name,attributes.6.short_name,attributes.7.short_name,attributes.8.short_name,attributes.9.short_name,attributes.10.short_name,attributes.11.short_name,attributes.12.short_name,attributes.13.short_name,attributes.14.short_name,attributes.15.short_name,attributes.16.short_name,attributes.17.short_name,attributes.18.short_name,attributes.19.short_name,attributes.20.short_name,attributes.21.short_name,attributes.22.short_name,attributes.23.short_name,attributes.24.short_name,attributes.25.short_name,attributes.26.short_name,attributes.27.short_name,attributes.28.short_name,attributes.29.short_name,attributes.30.short_name,attributes.31.short_name'
 
 # Get the values
-mongoexport -o classifications_cset_values.csv ${MONGODUMP_OPTS} -v --query='{ "namespace": "CSET", "publish": true }' --type=csv --collection=classifications --noHeaderLine --fields='_id,incident_id,namespace,publish,attributes.0.value_json,attributes.1.value_json,attributes.2.value_json,attributes.3.value_json,attributes.4.value_json,attributes.5.value_json,attributes.6.value_json,attributes.7.value_json,attributes.8.value_json,attributes.9.value_json,attributes.10.value_json,attributes.11.value_json,attributes.12.value_json,attributes.13.value_json,attributes.14.value_json,attributes.15.value_json,attributes.16.value_json,attributes.17.value_json,attributes.18.value_json,attributes.19.value_json,attributes.20.value_json,attributes.21.value_json,attributes.22.value_json,attributes.23.value_json,attributes.24.value_json,attributes.25.value_json,attributes.26.value_json,attributes.27.value_json,attributes.28.value_json,attributes.29.value_json,attributes.30.value_json,attributes.31.value_json'
+mongoexport -o classifications_cset_values.csv --uri=${MONGODB_URI} -v --query='{ "namespace": "CSET", "publish": true }' --type=csv --collection=classifications --noHeaderLine --fields='_id,incident_id,namespace,publish,attributes.0.value_json,attributes.1.value_json,attributes.2.value_json,attributes.3.value_json,attributes.4.value_json,attributes.5.value_json,attributes.6.value_json,attributes.7.value_json,attributes.8.value_json,attributes.9.value_json,attributes.10.value_json,attributes.11.value_json,attributes.12.value_json,attributes.13.value_json,attributes.14.value_json,attributes.15.value_json,attributes.16.value_json,attributes.17.value_json,attributes.18.value_json,attributes.19.value_json,attributes.20.value_json,attributes.21.value_json,attributes.22.value_json,attributes.23.value_json,attributes.24.value_json,attributes.25.value_json,attributes.26.value_json,attributes.27.value_json,attributes.28.value_json,attributes.29.value_json,attributes.30.value_json,attributes.31.value_json'
 
 # Construct the header
 echo -n "_id,incident_id,namespace,publish," > tmp.csv
