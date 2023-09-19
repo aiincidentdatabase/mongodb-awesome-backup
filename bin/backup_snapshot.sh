@@ -13,7 +13,7 @@ CRONMODE=${CRONMODE:-false}
 #MONGODB_PASSWORD=
 #MONGODB_AUTHDB=
 #MONGODUMP_OPTS=
-#TARGET_PUBLIC_BUCKET_URL=[s3://... | gs://...] (must be ended with /)
+#TARGET_PRIVATE_BUCKET_URL=[s3://... | gs://...] (must be ended with /)
 
 # start script
 CWD=`/usr/bin/dirname $0`
@@ -38,12 +38,12 @@ TARBALL_FULLPATH="${TMPDIR}/${TARBALL}"
 
 # check parameters
 # deprecate the old option
-if [ "x${S3_TARGET_PUBLIC_BUCKET_URL}" != "x" ]; then
-  echo "WARNING: The environment variable S3_TARGET_PUBLIC_BUCKET_URL is deprecated.  Please use TARGET_PUBLIC_BUCKET_URL instead."
-  TARGET_PUBLIC_BUCKET_URL=$S3_TARGET_PUBLIC_BUCKET_URL
+if [ "x${S3_TARGET_PRIVATE_BUCKET_URL}" != "x" ]; then
+  echo "WARNING: The environment variable S3_TARGET_PRIVATE_BUCKET_URL is deprecated.  Please use TARGET_PRIVATE_BUCKET_URL instead."
+  TARGET_PRIVATE_BUCKET_URL=$S3_TARGET_PRIVATE_BUCKET_URL
 fi
-if [ "x${TARGET_PUBLIC_BUCKET_URL}" == "x" ]; then
-  echo "ERROR: The environment variable TARGET_PUBLIC_BUCKET_URL must be specified." 1>&2
+if [ "x${TARGET_PRIVATE_BUCKET_URL}" == "x" ]; then
+  echo "ERROR: The environment variable TARGET_PRIVATE_BUCKET_URL must be specified." 1>&2
   exit 1
 fi
 
@@ -64,14 +64,14 @@ echo "---"
 ls -lah ${TARGET}
 
 # run tar command
-echo "backup ${TARGET}..."
+echo "start backup ${TARGET} into ${TARGET_PRIVATE_BUCKET_URL} ..."
 time ${TAR_CMD} ${TAR_OPTS} ${TARBALL_FULLPATH} -C ${DIRNAME} ${BASENAME}
 
-if [ `echo $TARGET_PUBLIC_BUCKET_URL | cut -f1 -d":"` == "s3" ]; then
+if [ `echo $TARGET_PRIVATE_BUCKET_URL | cut -f1 -d":"` == "s3" ]; then
   # transfer tarball to Amazon S3
-  s3_copy_file ${TARBALL_FULLPATH} ${TARGET_PUBLIC_BUCKET_URL}
-elif [ `echo $TARGET_PUBLIC_BUCKET_URL | cut -f1 -d":"` == "gs" ]; then
-  gs_copy_file ${TARBALL_FULLPATH} ${TARGET_PUBLIC_BUCKET_URL}
+  s3_copy_file ${TARBALL_FULLPATH} ${TARGET_PRIVATE_BUCKET_URL}
+elif [ `echo $TARGET_PRIVATE_BUCKET_URL | cut -f1 -d":"` == "gs" ]; then
+  gs_copy_file ${TARBALL_FULLPATH} ${TARGET_PRIVATE_BUCKET_URL}
 fi
 
 # call healthchecks url for successful backup
