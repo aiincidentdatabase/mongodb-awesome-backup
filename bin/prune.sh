@@ -13,6 +13,12 @@ cd $CWD
 . ./functions.sh
 PAST=`create_past_yyyymmdd ${DELETE_TARGET_DAYS_LEFT}`
 
+# check parameters
+if [ "x${TARGET_BUCKET_URL}" == "x" ]; then
+  echo "ERROR: The environment variable TARGET_BUCKET_URL must be specified." 1>&2
+  #exit 1
+fi
+
 # check the existence of past file
 # if it exists, delete it
 TARBALL_PAST="${BACKUPFILE_PREFIX}-${PAST}.tar.bz2"
