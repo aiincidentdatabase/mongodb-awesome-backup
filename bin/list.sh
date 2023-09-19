@@ -1,5 +1,7 @@
 #!/bin/bash -e
 
+echo "Starting list.sh execution..."
+
 # start script
 CWD=`/usr/bin/dirname $0`
 cd $CWD
