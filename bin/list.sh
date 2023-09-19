@@ -2,6 +2,8 @@
 
 echo "Starting list.sh execution..."
 
+TARGET_BUCKET_URL=${TARGET_BUCKET_URL}
+
 # start script
 CWD=`/usr/bin/dirname $0`
 cd $CWD
