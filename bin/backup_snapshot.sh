@@ -1,5 +1,7 @@
 #!/bin/bash -e
 
+echo "Starting backup_csv_data.sh script execution..."
+
 # settings
 BACKUPFILE_PREFIX=${BACKUPFILE_PREFIX:-backup}
 MONGODB_HOST=${MONGODB_HOST:-mongo}
