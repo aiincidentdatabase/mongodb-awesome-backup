@@ -13,7 +13,7 @@ CRONMODE=${CRONMODE:-false}
 #MONGODB_PASSWORD=
 #MONGODB_AUTHDB=
 #MONGODUMP_OPTS=
-#TARGET_BUCKET_URL=[s3://... | gs://...] (must be ended with /)
+#TARGET_PRIVATE_BUCKET_URL=[s3://... | gs://...] (must be ended with /)
 
 # start script
 CWD=`/usr/bin/dirname $0`
@@ -38,12 +38,12 @@ TARBALL_FULLPATH="${TMPDIR}/${TARBALL}"
 
 # check parameters
 # deprecate the old option
-if [ "x${S3_TARGET_BUCKET_URL}" != "x" ]; then
-  echo "WARNING: The environment variable S3_TARGET_BUCKET_URL is deprecated.  Please use TARGET_BUCKET_URL instead."
-  TARGET_BUCKET_URL=$S3_TARGET_BUCKET_URL
+if [ "x${S3_TARGET_PRIVATE_BUCKET_URL}" != "x" ]; then
+  echo "WARNING: The environment variable S3_TARGET_PRIVATE_BUCKET_URL is deprecated.  Please use TARGET_PRIVATE_BUCKET_URL instead."
+  TARGET_PRIVATE_BUCKET_URL=$S3_TARGET_PRIVATE_BUCKET_URL
 fi
-if [ "x${TARGET_BUCKET_URL}" == "x" ]; then
-  echo "ERROR: The environment variable TARGET_BUCKET_URL must be specified." 1>&2
+if [ "x${TARGET_PRIVATE_BUCKET_URL}" == "x" ]; then
+  echo "ERROR: The environment variable TARGET_PRIVATE_BUCKET_URL must be specified." 1>&2
   exit 1
 fi
 
@@ -84,10 +84,6 @@ rm classifications_cset_headers.csv
 rm classifications_cset_values.csv
 
 
-
-
-
-
 # Translations Export
 MONGODUMP_OPTS_TRANSLATIONS="--uri=${MONGODB_URI_TRANSLATIONS}"
 #echo "dump MongoDB translations to the local filesystem..."
@@ -103,11 +99,11 @@ ls -lah ${TARGET}
 echo "backup ${TARGET}..."
 time ${TAR_CMD} ${TAR_OPTS} ${TARBALL_FULLPATH} -C ${DIRNAME} ${BASENAME}
 
-if [ `echo $TARGET_BUCKET_URL | cut -f1 -d":"` == "s3" ]; then
+if [ `echo $TARGET_PRIVATE_BUCKET_URL | cut -f1 -d":"` == "s3" ]; then
   # transfer tarball to Amazon S3
-  s3_copy_file ${TARBALL_FULLPATH} ${TARGET_BUCKET_URL}
-elif [ `echo $TARGET_BUCKET_URL | cut -f1 -d":"` == "gs" ]; then
-  gs_copy_file ${TARBALL_FULLPATH} ${TARGET_BUCKET_URL}
+  s3_copy_file ${TARBALL_FULLPATH} ${TARGET_PRIVATE_BUCKET_URL}
+elif [ `echo $TARGET_PRIVATE_BUCKET_URL | cut -f1 -d":"` == "gs" ]; then
+  gs_copy_file ${TARBALL_FULLPATH} ${TARGET_PRIVATE_BUCKET_URL}
 fi
 
 # call healthchecks url for successful backup
