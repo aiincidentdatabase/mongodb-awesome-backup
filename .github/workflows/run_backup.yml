@@ -37,7 +37,7 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Generate public and private backups
-        id: build-public-image
+        id: build-image
         run: |
           ls
           pwd
