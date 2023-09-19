@@ -53,7 +53,7 @@ MONGODUMP_OPTS="--uri=${MONGODB_URI} ${MONGODUMP_OPTS}"
 echo "dump MongoDB aiidprod to the local filesystem..."
 mongodump -o ${TARGET} ${MONGODUMP_OPTS}
 
-# Translations Export
+# Dump Translations database
 MONGODUMP_OPTS_TRANSLATIONS="--uri=${MONGODB_URI_TRANSLATIONS}"
 echo "dump MongoDB translations to the local filesystem..."
 mongodump -o ${TARGET} ${MONGODUMP_OPTS_TRANSLATIONS}

@@ -18,4 +18,4 @@ ENV AWS_DEFAULT_REGION=ap-northeast-1
 COPY bin /opt/bin
 WORKDIR /opt/bin
 ENTRYPOINT ["/opt/bin/entrypoint.sh"]
-CMD ["backup_snapshot", "backup_csv_data", "prune", "list"]
+CMD ["backup_full_snapshot", "backup_filtered_data", "prune", "list"]
