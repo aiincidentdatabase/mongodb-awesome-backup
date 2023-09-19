@@ -1,6 +1,6 @@
 name: Deploy to Amazon ECR
 
-on: [workflow_dispatch]
+on: push
 
 #on:
 #  create:
