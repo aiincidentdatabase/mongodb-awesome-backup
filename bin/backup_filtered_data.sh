@@ -35,7 +35,6 @@ BASENAME=`/usr/bin/basename ${TARGET}`
 TARBALL="${BACKUPFILE_PREFIX}-${NOW}.tar.bz2"
 TARBALL_FULLPATH="${TMPDIR}/${TARBALL}"
 
-
 # check parameters
 # deprecate the old option
 if [ "x${S3_TARGET_BUCKET_URL}" != "x" ]; then
