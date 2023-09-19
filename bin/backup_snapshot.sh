@@ -15,7 +15,6 @@ CRONMODE=${CRONMODE:-false}
 #MONGODUMP_OPTS=
 #TARGET_BUCKET_URL=[s3://... | gs://...] (must be ended with /)
 TARGET_BUCKET_URL=${TARGET_PRIVATE_BUCKET_URL}
-export TARGET_BUCKET_URL=${TARGET_PRIVATE_BUCKET_URL}
 
 # start script
 CWD=`/usr/bin/dirname $0`
