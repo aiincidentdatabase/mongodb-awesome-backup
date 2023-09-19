@@ -45,7 +45,8 @@ jobs:
           docker run --rm \
             -e AWS_ACCESS_KEY_ID="${{ secrets.AWS_S3_BACKUP_USER_ACCESS_KEY_ID }}" \
             -e AWS_SECRET_ACCESS_KEY="${{ secrets.AWS_S3_BACKUP_USER_SECRET_ACCESS_KEY }}" \
-            -e TARGET_BUCKET_URL="s3://aiid-test/" \
+            -e TARGET_PRIVATE_BUCKET_URL="s3://aiid-backups-private-test/" \
+            -e TARGET_PUBLIC_BUCKET_URL="s3://aiid-test/" \
             -e BACKUPFILE_PREFIX="backup" \
             -e MONGODB_HOST="mongo" \
             -e MONGODB_URI="mongodb+srv://${{ secrets.MONGO_BACKUP_USER }}:${{ secrets.MONGO_BACKUP_USER_PASSWORD }}@aiiddev-aqdmh.gcp.mongodb.net/aiidprod" \
@@ -59,25 +60,3 @@ jobs:
             -v ~:/mab \
             public.ecr.aws/f9s0r7r8/mongodb-awesome-backup:latest
 
-      # - name: Generate private backup
-      #   id: build-private-image
-      #   run: |
-      #     ls
-      #     pwd
-      #     ls -a
-      #     docker run --rm \
-      #       -e AWS_ACCESS_KEY_ID="${{ secrets.AWS_S3_BACKUP_USER_ACCESS_KEY_ID }}" \
-      #       -e AWS_SECRET_ACCESS_KEY="${{ secrets.AWS_S3_BACKUP_USER_SECRET_ACCESS_KEY }}" \
-      #       -e TARGET_BUCKET_URL="s3://aiid-backups-private-test/" \
-      #       -e BACKUPFILE_PREFIX="backup_snapshot_and_csv" \
-      #       -e MONGODB_HOST="mongo" \
-      #       -e MONGODB_URI="mongodb+srv://${{ secrets.MONGO_BACKUP_USER }}:${{ secrets.MONGO_BACKUP_USER_PASSWORD }}@aiiddev-aqdmh.gcp.mongodb.net/aiidprod" \
-      #       -e MONGODB_DBNAME="aiidprod" \
-      #       -e MONGODB_URI_TRANSLATIONS="mongodb+srv://${{ secrets.MONGO_BACKUP_USER }}:${{ secrets.MONGO_BACKUP_USER_PASSWORD }}@aiiddev-aqdmh.gcp.mongodb.net/translations" \
-      #       -e MONGODB_DBNAME_TRANSLATIONS="translations" \
-      #       -e MONGODB_USERNAME="${{ secrets.MONGO_BACKUP_USER }}" \
-      #       -e MONGODB_PASSWORD="${{ secrets.MONGO_BACKUP_USER_PASSWORD }}" \
-      #       -e MONGODB_AUTHDB="admin" \
-      #       -e AWSCLI_ENDPOINT_OPT="" \
-      #       -v ~:/mab \
-      #       public.ecr.aws/f9s0r7r8/mongodb-awesome-backup:latest
