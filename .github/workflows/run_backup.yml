@@ -58,5 +58,5 @@ jobs:
             -e MONGODB_AUTHDB="admin" \
             -e AWSCLI_ENDPOINT_OPT="" \
             -v ~:/mab \
-            public.ecr.aws/${{ secrets.AWS_ECR_ID || 'd4w2c1x5'}}/mongodb-awesome-backup:latest
+            public.ecr.aws/${{ vars.AWS_ECR_ID || 'd4w2c1x5'}}/mongodb-awesome-backup:latest
 
