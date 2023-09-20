@@ -44,10 +44,10 @@ jobs:
           # Build a docker container and
           # push it to ECR
 
-          aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/d4w2c1x5
+          aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/${{ secrets.AWS_ECR_ID || 'd4w2c1x5'}}
           docker build -t mongodb-awesome-backup .
-          docker tag mongodb-awesome-backup:latest public.ecr.aws/d4w2c1x5/mongodb-awesome-backup:latest
-          docker push public.ecr.aws/d4w2c1x5/mongodb-awesome-backup:latest
+          docker tag mongodb-awesome-backup:latest public.ecr.aws/${{ secrets.AWS_ECR_ID || 'd4w2c1x5'}}/mongodb-awesome-backup:latest
+          docker push public.ecr.aws/${{ secrets.AWS_ECR_ID || 'd4w2c1x5'}}/mongodb-awesome-backup:latest
 
           # Old commands
           #docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
