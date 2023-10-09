@@ -45,8 +45,12 @@ jobs:
           docker run --rm \
             -e AWS_ACCESS_KEY_ID="${{ secrets.AWS_S3_BACKUP_USER_ACCESS_KEY_ID }}" \
             -e AWS_SECRET_ACCESS_KEY="${{ secrets.AWS_S3_BACKUP_USER_SECRET_ACCESS_KEY }}" \
-            -e TARGET_PRIVATE_BUCKET_URL="${{ vars.AWS_S3_PRIVATE_BUCKET || 's3://aiid-backups-private/'}}" \
-            -e TARGET_PUBLIC_BUCKET_URL="${{ vars.AWS_S3_PUBLIC_BUCKET || 's3://aiid-backups-public/'}}" \
+            -e TARGET_PRIVATE_BUCKET_URL="${{ vars.AWS_S3_PRIVATE_BUCKET }}" \
+            -e TARGET_PUBLIC_BUCKET_URL="${{ vars.AWS_S3_PUBLIC_BUCKET }}" \
+            -e CLOUDFLARE_ACCOUNT_ID="${{ vars.CLOUDFLARE_ACCOUNT_ID }}" \
+            -e CLOUDFLARE_API_TOKEN="${{ secrets.CLOUDFLARE_API_TOKEN }}" \
+            -e CLOUDFLARE_R2_PUBLIC_BUCKET="${{ vars.CLOUDFLARE_R2_PUBLIC_BUCKET }}" \
+            -e CLOUDFLARE_R2_PRIVATE_BUCKET="${{ vars.CLOUDFLARE_R2_PRIVATE_BUCKET }}" \
             -e BACKUPFILE_PREFIX="backup" \
             -e MONGODB_HOST="mongo" \
             -e MONGODB_URI="mongodb+srv://${{ secrets.MONGO_BACKUP_USER }}:${{ secrets.MONGO_BACKUP_USER_PASSWORD }}@aiiddev-aqdmh.gcp.mongodb.net/aiidprod" \
