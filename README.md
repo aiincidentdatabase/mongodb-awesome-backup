@@ -24,6 +24,10 @@ docker run --rm \
   -e AWS_SECRET_ACCESS_KEY=<Your IAM Secret Access Key> \
   -e TARGET_PRIVATE_BUCKET_URL=<Target public Bucket URL ([s3://...|gs://...])> \
   -e TARGET_PUBLIC_BUCKET_URL=<Target private Bucket URL ([s3://...|gs://...])> \
+  -e CLOUDFLARE_ACCOUNT_ID=<Cloudflare R2 account ID> \
+  -e CLOUDFLARE_API_TOKEN=<Cloudflare R2 token value> \
+  -e CLOUDFLARE_R2_PUBLIC_BUCKET=<Cloudflare R2 public bucket name (ie: "aiid-public")> \
+  -e CLOUDFLARE_R2_PRIVATE_BUCKET=<Cloudflare R2 private bucket name (ie: "aiid-private")> \
   [ -e BACKUPFILE_PREFIX=<Prefix of Backup Filename (default: "backup") \ ]
   [ -e MONGODB_URI=<Target MongoDB URI> \ ]
   [ -e MONGODB_HOST=<Target MongoDB Host (default: "mongo")> \ ]
@@ -52,6 +56,10 @@ Environment variables
 | AWS_SECRET_ACCESS_KEY | Your IAM Secret Access Key                                                     | -       |
 | TARGET_PRIVATE_BUCKET_URL     | Target private Bucket URL ([s3://...\|gs://...]). **URL is needed to be end with '/'** | -       |
 | TARGET_PUBLIC_BUCKET_URL     | Target public Bucket URL ([s3://...\|gs://...]). **URL is needed to be end with '/'** | -       |
+| CLOUDFLARE_ACCOUNT_ID     | Cloudflare R2 account ID | -       |
+| CLOUDFLARE_API_TOKEN     | Cloudflare R2 token value | -       |
+| CLOUDFLARE_R2_PUBLIC_BUCKET     | Cloudflare R2 public bucket name (ie: "aiid-public") | -       |
+| CLOUDFLARE_R2_PRIVATE_BUCKET     | Cloudflare R2 private bucket name (ie: "aiid-private") | -       |
 
 #### Optional
 
