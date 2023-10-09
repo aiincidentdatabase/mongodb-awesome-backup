@@ -1,4 +1,4 @@
-FROM alpine:3.12
+FROM node:14-alpine
 
 LABEL maintainer="Sean McGregor <mongodb-awesome-backup@seanbmcgregor.com>"
 
