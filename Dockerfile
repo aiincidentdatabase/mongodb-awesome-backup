@@ -8,7 +8,8 @@ RUN apk add --no-cache \
     tzdata \
     py3-pip \
     mongodb-tools \
-    curl
+    curl \
+    npm
 
 # install awscli
 RUN pip install awscli
