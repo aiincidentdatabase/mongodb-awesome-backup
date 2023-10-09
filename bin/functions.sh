@@ -69,9 +69,9 @@ gs_copy_file() {
 	${GCSCLI} ${GCSCLIOPT} ${GCSCLI_COPY_OPT} $1 $2
 }
 r2_copy_file() {
-	echo "CLOUDFLARE_ACCOUNT_ID=$1 CLOUDFLARE_API_TOKEN=$2 ${WRANGLERCLI} r2 object put $3$4 --file $4"
-	if [ $# -ne 4 ]; then return 255; fi
-	CLOUDFLARE_ACCOUNT_ID=$1 CLOUDFLARE_API_TOKEN=$2 ${WRANGLERCLI} r2 object put $3$4 --file $4
+	echo "CLOUDFLARE_ACCOUNT_ID=$1 CLOUDFLARE_API_TOKEN=$2 ${WRANGLERCLI} r2 object put $3/$4 --file $5"
+	if [ $# -ne 5 ]; then return 255; fi
+	CLOUDFLARE_ACCOUNT_ID=$1 CLOUDFLARE_API_TOKEN=$2 ${WRANGLERCLI} r2 object put $3/$4 --file $5
 }
 
 # Create current datetime string(YYYYmmddHHMMSS)
