@@ -1,4 +1,4 @@
-name: Backup to Amazon S3
+name: Backup to the cloud
 
 on:
   push:
