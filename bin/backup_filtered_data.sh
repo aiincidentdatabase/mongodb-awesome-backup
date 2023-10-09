@@ -14,6 +14,7 @@ CRONMODE=${CRONMODE:-false}
 #MONGODB_AUTHDB=
 #TARGET_BUCKET_URL=[s3://... | gs://...] (must be ended with /)
 TARGET_BUCKET_URL=${TARGET_PUBLIC_BUCKET_URL}
+CLOUDFLARE_ACCOUNT_ID=${CLOUDFLARE_ACCOUNT_ID}
 
 # start script
 CWD=`/usr/bin/dirname $0`
@@ -96,6 +97,11 @@ ls -lah ${TARGET}
 # run tar command
 echo "Start backup ${TARGET} into ${TARGET_BUCKET_URL} ..."
 time ${TAR_CMD} ${TAR_OPTS} ${TARBALL_FULLPATH} -C ${DIRNAME} ${BASENAME}
+
+if [ "x${CLOUDFLARE_ACCOUNT_ID}" != "x" ]; then
+  # upload tarball to Cloudflare R2
+  r2_copy_file ${CLOUDFLARE_ACCOUNT_ID} ${CLOUDFLARE_API_TOKEN} ${CLOUDFLARE_R2_PUBLIC_BUCKET} ${TARBALL} ${TARBALL_FULLPATH}
+fi
 
 if [ `echo $TARGET_BUCKET_URL | cut -f1 -d":"` == "s3" ]; then
   # transfer tarball to Amazon S3
