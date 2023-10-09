@@ -13,6 +13,8 @@ GCSCLI_LIST_OPT="ls"
 GCSCLI_DEL_OPT="rm"
 GCSCLIOPT=${GCSCLIOPT:-}
 
+WRANGLERCLI="/usr/bin/wrangler"
+
 DATE_CMD="/bin/date"
 
 # Check the existence of specified file.
@@ -65,6 +67,11 @@ s3_copy_file() {
 gs_copy_file() {
 	if [ $# -ne 2 ]; then return 255; fi
 	${GCSCLI} ${GCSCLIOPT} ${GCSCLI_COPY_OPT} $1 $2
+}
+r2_copy_file() {
+	echo "CLOUDFLARE_ACCOUNT_ID=$1 CLOUDFLARE_API_TOKEN=$2 wrangler r2 object put $3/$4 --file $4"
+	if [ $# -ne 4 ]; then return 255; fi
+	CLOUDFLARE_ACCOUNT_ID=$1 CLOUDFLARE_API_TOKEN=$2 ${WRANGLERCLI} r2 object put $3/$4 --file $4
 }
 
 # Create current datetime string(YYYYmmddHHMMSS)

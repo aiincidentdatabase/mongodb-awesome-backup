@@ -13,6 +13,9 @@ RUN apk add --no-cache \
 # install awscli
 RUN pip install awscli
 
+# install wrangler (Cloudflare R2 cli)
+RUN pip install wrangler
+
 ENV AWS_DEFAULT_REGION=ap-northeast-1
 
 COPY bin /opt/bin
