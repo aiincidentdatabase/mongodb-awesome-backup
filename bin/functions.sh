@@ -46,6 +46,14 @@ s3_list_files() {
 gs_list_files() {
 	${GCSCLI} ${GCSCLIOPT} ${GCSCLI_LIST_OPT} $1
 }
+# Output the list of the files on specified Cloudflare R2.
+# arguments: 1. CLOUDFLARE_ACCOUNT_ID
+#            2. CLOUDFLARE_API_TOKEN
+#            3. CLOUDFLARE_R2_PUBLIC_BUCKET or CLOUDFLARE_R2_PRIVATE_BUCKET
+r2_list_files() {
+	if [ $# -ne 3 ]; then return 255; fi
+	CLOUDFLARE_ACCOUNT_ID=$1 CLOUDFLARE_API_TOKEN=$2 ${WRANGLERCLI} r2 object get $3/
+}
 
 # Delete the specified file.
 # arguments: 1. s3 url (s3://.../...)

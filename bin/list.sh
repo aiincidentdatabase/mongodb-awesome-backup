@@ -40,3 +40,12 @@ elif [ `echo $TARGET_BUCKET_URL | cut -f1 -d":"` == "gs" ]; then
   echo "There are files below in '${TARGET_BUCKET_URL}' GS bucket:"
   gs_list_files ${TARGET_BUCKET_URL}
 fi
+
+# output Cludflare R2 account bucket file list
+if [ "x${CLOUDFLARE_ACCOUNT_ID}" != "x" ]; then
+  echo "There are files below in '${CLOUDFLARE_R2_PUBLIC_BUCKET}' R2 bucket:"
+  r2_list_files ${CLOUDFLARE_ACCOUNT_ID} ${CLOUDFLARE_API_TOKEN} ${CLOUDFLARE_R2_PUBLIC_BUCKET}
+
+  echo "There are files below in '${CLOUDFLARE_R2_PRIVATE_BUCKET}' R2 bucket:"
+  r2_list_files ${CLOUDFLARE_ACCOUNT_ID} ${CLOUDFLARE_API_TOKEN} ${CLOUDFLARE_R2_PRIVATE_BUCKET}
+fi
