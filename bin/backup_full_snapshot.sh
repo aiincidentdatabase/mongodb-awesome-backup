@@ -16,8 +16,6 @@ CRONMODE=${CRONMODE:-false}
 #TARGET_BUCKET_URL=[s3://... | gs://...] (must be ended with /)
 TARGET_BUCKET_URL=${TARGET_PRIVATE_BUCKET_URL}
 CLOUDFLARE_ACCOUNT_ID=${CLOUDFLARE_ACCOUNT_ID}
-CLOUDFLARE_API_TOKEN=${CLOUDFLARE_API_TOKEN}
-CLOUDFLARE_R2_PRIVATE_BUCKET=${CLOUDFLARE_R2_PRIVATE_BUCKET}
 
 # start script
 CWD=`/usr/bin/dirname $0`
@@ -50,15 +48,12 @@ if [ "x${TARGET_BUCKET_URL}${CLOUDFLARE_ACCOUNT_ID}" == "x" ]; then
   echo "ERROR: At least one of the environment variables TARGET_BUCKET_URL or CLOUDFLARE_ACCOUNT_ID must be specified." 1>&2
   exit 1
 fi
-
-echo "${CLOUDFLARE_ACCOUNT_ID}" - "${CLOUDFLARE_API_TOKEN}" - "${CLOUDFLARE_R2_PRIVATE_BUCKET}" - "${CLOUDFLARE_R2_PUBLIC_BUCKET}"
-
 if [ "x${CLOUDFLARE_ACCOUNT_ID}" != "x" ]; then
-  if [ "x${CLOUDFLARE_API_TOKEN}" != "x" ]; then
+  if [ -z "${CLOUDFLARE_API_TOKEN}" ]; then
     echo "ERROR: If CLOUDFLARE_ACCOUNT_ID environment variable is defined, you have to define the CLOUDFLARE_API_TOKEN as well" 1>&2
     exit 1
   fi
-  if [ "x${CLOUDFLARE_R2_PRIVATE_BUCKET}" != "x" ]; then
+  if [ -z "${CLOUDFLARE_R2_PRIVATE_BUCKET}" ]; then
     echo "ERROR: If CLOUDFLARE_ACCOUNT_ID environment variable is defined, you have to define the CLOUDFLARE_R2_PRIVATE_BUCKET as well" 1>&2
     exit 1
   fi
