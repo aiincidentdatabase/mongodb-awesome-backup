@@ -27,20 +27,12 @@ if [ "x${CLOUDFLARE_ACCOUNT_ID}" != "x" ]; then
   r2_delete_file_if_delete_backup_day ${CLOUDFLARE_ACCOUNT_ID} ${CLOUDFLARE_API_TOKEN} ${CLOUDFLARE_R2_PRIVATE_BUCKET}/${TARBALL_PAST} ${DELETE_TARGET_DAYS_LEFT} ${DELETE_DEVIDE}
 fi
 
-TARGET_BUCKET_URL=${TARGET_PRIVATE_BUCKET_URL}
-
-echo "pruning ${TARGET_BUCKET_URL}"
-if [ `echo $TARGET_BUCKET_URL | cut -f1 -d":"` == "s3" ]; then
-  s3_delete_file_if_delete_backup_day ${TARGET_BUCKET_URL}${TARBALL_PAST} ${DELETE_TARGET_DAYS_LEFT} ${DELETE_DEVIDE}
-elif [ `echo $TARGET_BUCKET_URL | cut -f1 -d":"` == "gs" ]; then
-  gs_delete_file_if_delete_backup_day ${TARGET_BUCKET_URL}${TARBALL_PAST} ${DELETE_TARGET_DAYS_LEFT} ${DELETE_DEVIDE}
-fi
-
-TARGET_BUCKET_URL=${TARGET_PUBLIC_BUCKET_URL}
-
-echo "pruning ${TARGET_BUCKET_URL}"
-if [ `echo $TARGET_BUCKET_URL | cut -f1 -d":"` == "s3" ]; then
-  s3_delete_file_if_delete_backup_day ${TARGET_BUCKET_URL}${TARBALL_PAST} ${DELETE_TARGET_DAYS_LEFT} ${DELETE_DEVIDE}
-elif [ `echo $TARGET_BUCKET_URL | cut -f1 -d":"` == "gs" ]; then
-  gs_delete_file_if_delete_backup_day ${TARGET_BUCKET_URL}${TARBALL_PAST} ${DELETE_TARGET_DAYS_LEFT} ${DELETE_DEVIDE}
-fi
+for TARGET_BUCKET_URL in ${TARGET_PRIVATE_BUCKET_URL} ${TARGET_PUBLIC_BUCKET_URL}
+do
+  echo "pruning ${TARGET_BUCKET_URL}"
+  if [ `echo $TARGET_BUCKET_URL | cut -f1 -d":"` == "s3" ]; then
+    s3_delete_file_if_delete_backup_day ${TARGET_BUCKET_URL}${TARBALL_PAST} ${DELETE_TARGET_DAYS_LEFT} ${DELETE_DEVIDE}
+  elif [ `echo $TARGET_BUCKET_URL | cut -f1 -d":"` == "gs" ]; then
+    gs_delete_file_if_delete_backup_day ${TARGET_BUCKET_URL}${TARBALL_PAST} ${DELETE_TARGET_DAYS_LEFT} ${DELETE_DEVIDE}
+  fi
+done
