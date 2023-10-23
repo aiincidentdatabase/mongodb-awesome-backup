@@ -13,6 +13,8 @@ GCSCLI_LIST_OPT="ls"
 GCSCLI_DEL_OPT="rm"
 GCSCLIOPT=${GCSCLIOPT:-}
 
+WRANGLERCLI="wrangler"
+
 DATE_CMD="/bin/date"
 
 # Check the existence of specified file.
@@ -27,6 +29,14 @@ gs_exists() {
 	if [ $# -ne 1 ]; then return 255; fi
 	${GCSCLI} ${GCSCLIOPT} ${GCSCLI_LIST_OPT} $1 >/dev/null
 }
+# Check the existence of specified file on Cloudflare R2 bucket.
+# arguments: 1. CLOUDFLARE_ACCOUNT_ID
+#            2. CLOUDFLARE_API_TOKEN
+#            3. CLOUDFLARE_R2_PUBLIC_BUCKET/<filename> or CLOUDFLARE_R2_PRIVATE_BUCKET/<filename>
+r2_exists() {
+	if [ $# -ne 3 ]; then return 255; fi
+	CLOUDFLARE_ACCOUNT_ID=$1 CLOUDFLARE_API_TOKEN=$2 ${WRANGLERCLI} r2 object get $3 >/dev/null
+}
 
 # Output the list of the files on specified S3 URL.
 # arguments: 1. s3 url (s3://...)
@@ -35,6 +45,14 @@ s3_list_files() {
 }
 gs_list_files() {
 	${GCSCLI} ${GCSCLIOPT} ${GCSCLI_LIST_OPT} $1
+}
+# Output the list of the files on specified Cloudflare R2.
+# arguments: 1. CLOUDFLARE_ACCOUNT_ID
+#            2. CLOUDFLARE_API_TOKEN
+#            3. CLOUDFLARE_R2_PUBLIC_BUCKET or CLOUDFLARE_R2_PRIVATE_BUCKET
+r2_list_files() {
+	if [ $# -ne 3 ]; then return 255; fi
+	CLOUDFLARE_ACCOUNT_ID=$1 CLOUDFLARE_API_TOKEN=$2 ${WRANGLERCLI} r2 object get $3/
 }
 
 # Delete the specified file.
@@ -46,6 +64,14 @@ s3_delete_file() {
 gs_delete_file() {
 	if [ $# -ne 1 ]; then return 255; fi
 	${GCSCLI} ${GCSCLIOPT} ${GCSCLI_DEL_OPT} $1
+}
+# Delete the specified file on Cloudflare R2 bucket.
+# arguments: 1. CLOUDFLARE_ACCOUNT_ID
+#            2. CLOUDFLARE_API_TOKEN
+#            3. CLOUDFLARE_R2_PUBLIC_BUCKET/<filename> or CLOUDFLARE_R2_PRIVATE_BUCKET/<filename>
+r2_delete_file() {
+	if [ $# -ne 3 ]; then return 255; fi
+	CLOUDFLARE_ACCOUNT_ID=$1 CLOUDFLARE_API_TOKEN=$2 ${WRANGLERCLI} r2 object delete $3
 }
 
 # Copy the specified file.
@@ -65,6 +91,11 @@ s3_copy_file() {
 gs_copy_file() {
 	if [ $# -ne 2 ]; then return 255; fi
 	${GCSCLI} ${GCSCLIOPT} ${GCSCLI_COPY_OPT} $1 $2
+}
+r2_copy_file() {
+	echo "CLOUDFLARE_ACCOUNT_ID=$1 CLOUDFLARE_API_TOKEN=$2 ${WRANGLERCLI} r2 object put $3/$4 --file $5"
+	if [ $# -ne 5 ]; then return 255; fi
+	CLOUDFLARE_ACCOUNT_ID=$1 CLOUDFLARE_API_TOKEN=$2 ${WRANGLERCLI} r2 object put $3/$4 --file $5
 }
 
 # Create current datetime string(YYYYmmddHHMMSS)
@@ -114,6 +145,22 @@ gs_delete_file_if_delete_backup_day() {
 			echo "DELETED past backuped file on GS: $1"
 		else
 			echo "not found past backuped file on GS: $1"
+		fi
+	fi
+}
+# arguments: 1. CLOUDFLARE_ACCOUNT_ID
+#            2. CLOUDFLARE_API_TOKEN
+#            3. CLOUDFLARE_R2_PUBLIC_BUCKET/<filename> or CLOUDFLARE_R2_PRIVATE_BUCKET/<filename>
+#			 4. how many days ago to be deleted
+#            5. divide number
+r2_delete_file_if_delete_backup_day() {
+	if [ $# -ne 5 ]; then return 255; fi
+	if check_is_delete_backup_day $4 $5; then
+		if r2_exists $1 $2 $3; then
+			r2_delete_file $1 $2 $3
+			echo "DELETED past backuped file on R2: $3"
+		else
+			echo "Not found past backuped file on R2: $3"
 		fi
 	fi
 }

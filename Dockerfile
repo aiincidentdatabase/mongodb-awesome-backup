@@ -1,4 +1,4 @@
-FROM alpine:3.12
+FROM node:17-alpine
 
 LABEL maintainer="Sean McGregor <mongodb-awesome-backup@seanbmcgregor.com>"
 
@@ -8,14 +8,18 @@ RUN apk add --no-cache \
     tzdata \
     py3-pip \
     mongodb-tools \
-    curl
+    curl \
+    npm
 
 # install awscli
 RUN pip install awscli
+
+# install wrangler (Cloudflare R2 cli)
+RUN npm install wrangler --global
 
 ENV AWS_DEFAULT_REGION=ap-northeast-1
 
 COPY bin /opt/bin
 WORKDIR /opt/bin
 ENTRYPOINT ["/opt/bin/entrypoint.sh"]
-CMD ["backup", "prune", "list"]
+CMD ["backup_full_snapshot", "backup_filtered_data", "prune", "list"]
