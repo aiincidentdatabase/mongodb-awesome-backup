@@ -15,7 +15,7 @@ GCSCLIOPT=${GCSCLIOPT:-}
 
 WRANGLERCLI="wrangler"
 
-CLOUDFLARE_UPLOAD_SCRIPT="./clouflare_python/cloudflare_upload_file.py"
+CLOUDFLARE_UPLOAD_SCRIPT="./cloudflare_python/cloudflare_upload_file.py"
 
 DATE_CMD="/bin/date"
 
