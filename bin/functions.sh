@@ -16,6 +16,7 @@ GCSCLIOPT=${GCSCLIOPT:-}
 WRANGLERCLI="wrangler"
 
 CLOUDFLARE_UPLOAD_SCRIPT="./cloudflare_python/cloudflare_upload_file.py"
+CLOUDFLARE_LIST_OBJECTS_SCRIPT="./cloudflare_python/cloudflare_list_objects.py"
 
 DATE_CMD="/bin/date"
 
@@ -50,11 +51,13 @@ gs_list_files() {
 }
 # Output the list of the files on specified Cloudflare R2.
 # arguments: 1. CLOUDFLARE_ACCOUNT_ID
-#            2. CLOUDFLARE_API_TOKEN
-#            3. CLOUDFLARE_R2_PUBLIC_BUCKET or CLOUDFLARE_R2_PRIVATE_BUCKET
+#            2. CLOUDFLARE_R2_ACCESS_KEY
+#            3. CLOUDFLARE_R2_SECRET_KEY
+#            4. Cloudflare R2 Bucket name CLOUDFLARE_R2_PUBLIC_BUCKET or CLOUDFLARE_R2_PRIVATE_BUCKET (ie: aiid-public)
 r2_list_files() {
-	if [ $# -ne 3 ]; then return 255; fi
-	CLOUDFLARE_ACCOUNT_ID=$1 CLOUDFLARE_API_TOKEN=$2 ${WRANGLERCLI} r2 object get $3/
+	if [ $# -ne 4 ]; then return 255; fi
+	echo "python3 ${CLOUDFLARE_LIST_OBJECTS_SCRIPT} $1 $2 $3 $4"
+	python3 ${CLOUDFLARE_LIST_OBJECTS_SCRIPT} $1 $2 $3 $4
 }
 
 # Delete the specified file.
@@ -103,7 +106,7 @@ gs_copy_file() {
 #			 6. File key for the bucket item (ie: backup-20231009233543.tar.bz2)
 r2_copy_file() {
 	if [ $# -ne 6 ]; then return 255; fi
-	echo "python ${CLOUDFLARE_UPLOAD_SCRIPT} $1 $2 $3 $4 $5 $6"
+	echo "python3 ${CLOUDFLARE_UPLOAD_SCRIPT} $1 $2 $3 $4 $5 $6"
 	python3 ${CLOUDFLARE_UPLOAD_SCRIPT} $1 $2 $3 $4 $5 $6
 }
 

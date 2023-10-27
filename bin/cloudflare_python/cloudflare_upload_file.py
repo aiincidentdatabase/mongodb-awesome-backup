@@ -1,7 +1,6 @@
 import sys
 import boto3
 
-# Replace these variables with your own Cloudflare R2 credentials and the name of your R2 bucket
 CLOUDFLARE_ACCOUNT_ID = sys.argv[1]
 CLOUDFLARE_R2_ACCESS_KEY = sys.argv[2]
 CLOUDFLARE_R2_SECRET_KEY = sys.argv[3]
@@ -16,14 +15,6 @@ s3 = boto3.client(
     aws_secret_access_key = CLOUDFLARE_R2_SECRET_KEY,
     region_name='auto', # Must be one of: wnam, enam, weur, eeur, apac, auto
 )
-
-# List all objects in the R2 bucket
-# response = s3.list_objects_v2(Bucket=R2_BUCKET_NAME)
-
-# Print the object keys
-# for obj in response['Contents']:
-#     print(obj['Key'], 'size:', obj['Size'])
-
 
 # Upload the file to the R2 bucket
 with open(FILE_PATH, 'rb') as f:
