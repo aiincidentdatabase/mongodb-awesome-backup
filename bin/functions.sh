@@ -17,6 +17,8 @@ WRANGLERCLI="wrangler"
 
 CLOUDFLARE_UPLOAD_SCRIPT="./cloudflare_python/cloudflare_upload_file.py"
 CLOUDFLARE_LIST_OBJECTS_SCRIPT="./cloudflare_python/cloudflare_list_objects.py"
+CLOUDFLARE_DELETE_OBJECT_SCRIPT="./cloudflare_python/cloudflare_delete_object.py"
+CLOUDFLARE_EXIST_OBJECT_SCRIPT="./cloudflare_python/cloudflare_exist_object.py"
 
 DATE_CMD="/bin/date"
 
@@ -34,11 +36,14 @@ gs_exists() {
 }
 # Check the existence of specified file on Cloudflare R2 bucket.
 # arguments: 1. CLOUDFLARE_ACCOUNT_ID
-#            2. CLOUDFLARE_API_TOKEN
-#            3. CLOUDFLARE_R2_PUBLIC_BUCKET/<filename> or CLOUDFLARE_R2_PRIVATE_BUCKET/<filename>
+#            2. CLOUDFLARE_R2_ACCESS_KEY
+#            3. CLOUDFLARE_R2_SECRET_KEY
+#            4. Cloudflare R2 Bucket name CLOUDFLARE_R2_PUBLIC_BUCKET or CLOUDFLARE_R2_PRIVATE_BUCKET (ie: aiid-public)
+#            5. File path for the bucket item (ie: backup-20231009233543.tar.bz2)
 r2_exists() {
-	if [ $# -ne 3 ]; then return 255; fi
-	CLOUDFLARE_ACCOUNT_ID=$1 CLOUDFLARE_API_TOKEN=$2 ${WRANGLERCLI} r2 object get $3 >/dev/null
+	if [ $# -ne 5 ]; then return 255; fi
+	echo "python3 ${CLOUDFLARE_EXIST_OBJECT_SCRIPT} $1 $2 $3 $4 $5"
+	python3 ${CLOUDFLARE_EXIST_OBJECT_SCRIPT} $1 $2 $3 $4 $5
 }
 
 # Output the list of the files on specified S3 URL.
@@ -72,11 +77,14 @@ gs_delete_file() {
 }
 # Delete the specified file on Cloudflare R2 bucket.
 # arguments: 1. CLOUDFLARE_ACCOUNT_ID
-#            2. CLOUDFLARE_API_TOKEN
-#            3. CLOUDFLARE_R2_PUBLIC_BUCKET/<filename> or CLOUDFLARE_R2_PRIVATE_BUCKET/<filename>
+#            2. CLOUDFLARE_R2_ACCESS_KEY
+#            3. CLOUDFLARE_R2_SECRET_KEY
+#            4. Cloudflare R2 Bucket name CLOUDFLARE_R2_PUBLIC_BUCKET or CLOUDFLARE_R2_PRIVATE_BUCKET (ie: aiid-public)
+#            5. File path for the bucket item (ie: backup-20231009233543.tar.bz2)
 r2_delete_file() {
-	if [ $# -ne 3 ]; then return 255; fi
-	CLOUDFLARE_ACCOUNT_ID=$1 CLOUDFLARE_API_TOKEN=$2 ${WRANGLERCLI} r2 object delete $3
+	if [ $# -ne 5 ]; then return 255; fi
+	echo "python3 ${CLOUDFLARE_DELETE_OBJECT_SCRIPT} $1 $2 $3 $4 $5"
+	python3 ${CLOUDFLARE_DELETE_OBJECT_SCRIPT} $1 $2 $3 $4 $5
 }
 
 # Copy the specified file.
@@ -161,15 +169,17 @@ gs_delete_file_if_delete_backup_day() {
 	fi
 }
 # arguments: 1. CLOUDFLARE_ACCOUNT_ID
-#            2. CLOUDFLARE_API_TOKEN
-#            3. CLOUDFLARE_R2_PUBLIC_BUCKET/<filename> or CLOUDFLARE_R2_PRIVATE_BUCKET/<filename>
-#			 4. how many days ago to be deleted
-#            5. divide number
+#            2. CLOUDFLARE_R2_ACCESS_KEY
+#            3. CLOUDFLARE_R2_SECRET_KEY
+#            4. Cloudflare R2 Bucket name CLOUDFLARE_R2_PUBLIC_BUCKET or CLOUDFLARE_R2_PRIVATE_BUCKET (ie: aiid-public)
+#            5. File path for the bucket item (ie: backup-20231009233543.tar.bz2)
+#            6. how many days ago to be deleted
+#            7. divide number
 r2_delete_file_if_delete_backup_day() {
-	if [ $# -ne 5 ]; then return 255; fi
-	if check_is_delete_backup_day $4 $5; then
-		if r2_exists $1 $2 $3; then
-			r2_delete_file $1 $2 $3
+	if [ $# -ne 7 ]; then return 255; fi
+	if check_is_delete_backup_day $6 $7; then
+		if r2_exists $1 $2 $3 $4 $5; then
+			r2_delete_file $1 $2 $3 $4 $5
 			echo "DELETED past backuped file on R2: $3"
 		else
 			echo "Not found past backuped file on R2: $3"
