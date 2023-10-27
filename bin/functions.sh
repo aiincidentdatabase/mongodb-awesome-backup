@@ -13,8 +13,6 @@ GCSCLI_LIST_OPT="ls"
 GCSCLI_DEL_OPT="rm"
 GCSCLIOPT=${GCSCLIOPT:-}
 
-WRANGLERCLI="wrangler"
-
 CLOUDFLARE_UPLOAD_SCRIPT="./cloudflare_python/cloudflare_upload_file.py"
 CLOUDFLARE_LIST_OBJECTS_SCRIPT="./cloudflare_python/cloudflare_list_objects.py"
 CLOUDFLARE_DELETE_OBJECT_SCRIPT="./cloudflare_python/cloudflare_delete_object.py"

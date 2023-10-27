@@ -17,9 +17,6 @@ RUN pip install awscli
 # install awscli
 RUN pip install boto3
 
-# install wrangler (Cloudflare R2 cli)
-RUN npm install wrangler --global
-
 ENV AWS_DEFAULT_REGION=ap-northeast-1
 
 COPY bin /opt/bin
