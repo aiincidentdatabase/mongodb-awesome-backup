@@ -100,7 +100,7 @@ r2_copy_file() {
 	# CLOUDFLARE_ACCOUNT_ID=$1 CLOUDFLARE_API_TOKEN=$2 ${WRANGLERCLI} r2 object put $3/$4 --file $5
 
 	echo "python ${CLOUDFLARE_UPLOAD_SCRIPT} $1 $2 $3 $4 $5"
-	python ${CLOUDFLARE_UPLOAD_SCRIPT} $1 $2 $3 $4 $5
+	python3 ${CLOUDFLARE_UPLOAD_SCRIPT} $1 $2 $3 $4 $5
 }
 
 # Create current datetime string(YYYYmmddHHMMSS)
