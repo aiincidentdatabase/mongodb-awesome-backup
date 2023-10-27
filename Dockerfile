@@ -14,6 +14,9 @@ RUN apk add --no-cache \
 # install awscli
 RUN pip install awscli
 
+# install awscli
+RUN pip install boto3
+
 # install wrangler (Cloudflare R2 cli)
 RUN npm install wrangler --global
 

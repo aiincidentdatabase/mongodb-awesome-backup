@@ -47,8 +47,12 @@ if [ "x${TARGET_BUCKET_URL}${CLOUDFLARE_ACCOUNT_ID}" == "x" ]; then
   exit 1
 fi
 if [ "x${CLOUDFLARE_ACCOUNT_ID}" != "x" ]; then
-  if [ -z "${CLOUDFLARE_API_TOKEN}" ]; then
-    echo "ERROR: If CLOUDFLARE_ACCOUNT_ID environment variable is defined, you have to define the CLOUDFLARE_API_TOKEN as well" 1>&2
+  if [ -z "${CLOUDFLARE_R2_ACCESS_KEY}" ]; then
+    echo "ERROR: If CLOUDFLARE_ACCOUNT_ID environment variable is defined, you have to define the CLOUDFLARE_R2_ACCESS_KEY as well" 1>&2
+    exit 1
+  fi
+  if [ -z "${CLOUDFLARE_R2_SECRET_KEY}" ]; then
+    echo "ERROR: If CLOUDFLARE_ACCOUNT_ID environment variable is defined, you have to define the CLOUDFLARE_R2_SECRET_KEY as well" 1>&2
     exit 1
   fi
   if [ -z "${CLOUDFLARE_R2_PUBLIC_BUCKET}" ]; then
@@ -110,7 +114,7 @@ time ${TAR_CMD} ${TAR_OPTS} ${TARBALL_FULLPATH} -C ${DIRNAME} ${BASENAME}
 
 if [ "x${CLOUDFLARE_ACCOUNT_ID}" != "x" ]; then
   # upload tarball to Cloudflare R2
-  r2_copy_file ${CLOUDFLARE_ACCOUNT_ID} ${CLOUDFLARE_API_TOKEN} ${CLOUDFLARE_R2_PUBLIC_BUCKET} ${TARBALL} ${TARBALL_FULLPATH}
+  r2_copy_file ${CLOUDFLARE_ACCOUNT_ID} ${CLOUDFLARE_R2_ACCESS_KEY} ${CLOUDFLARE_R2_SECRET_KEY} ${CLOUDFLARE_R2_PUBLIC_BUCKET} ${TARBALL_FULLPATH}
 elif [ `echo $TARGET_BUCKET_URL | cut -f1 -d":"` == "s3" ]; then
   # transfer tarball to Amazon S3
   s3_copy_file ${TARBALL_FULLPATH} ${TARGET_BUCKET_URL}

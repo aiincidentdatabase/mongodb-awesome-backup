@@ -15,6 +15,8 @@ GCSCLIOPT=${GCSCLIOPT:-}
 
 WRANGLERCLI="wrangler"
 
+CLOUDFLARE_UPLOAD_SCRIPT="./clouflare_python/cloudflare_upload_file.py"
+
 DATE_CMD="/bin/date"
 
 # Check the existence of specified file.
@@ -93,9 +95,12 @@ gs_copy_file() {
 	${GCSCLI} ${GCSCLIOPT} ${GCSCLI_COPY_OPT} $1 $2
 }
 r2_copy_file() {
-	echo "CLOUDFLARE_ACCOUNT_ID=$1 CLOUDFLARE_API_TOKEN=$2 ${WRANGLERCLI} r2 object put $3/$4 --file $5"
+	# echo "CLOUDFLARE_ACCOUNT_ID=$1 CLOUDFLARE_API_TOKEN=$2 ${WRANGLERCLI} r2 object put $3/$4 --file $5"
 	if [ $# -ne 5 ]; then return 255; fi
-	CLOUDFLARE_ACCOUNT_ID=$1 CLOUDFLARE_API_TOKEN=$2 ${WRANGLERCLI} r2 object put $3/$4 --file $5
+	# CLOUDFLARE_ACCOUNT_ID=$1 CLOUDFLARE_API_TOKEN=$2 ${WRANGLERCLI} r2 object put $3/$4 --file $5
+
+	echo "python ${CLOUDFLARE_UPLOAD_SCRIPT} $1 $2 $3 $4 $5"
+	python ${CLOUDFLARE_UPLOAD_SCRIPT} $1 $2 $3 $4 $5
 }
 
 # Create current datetime string(YYYYmmddHHMMSS)
