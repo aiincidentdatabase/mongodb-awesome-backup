@@ -94,13 +94,17 @@ gs_copy_file() {
 	if [ $# -ne 2 ]; then return 255; fi
 	${GCSCLI} ${GCSCLIOPT} ${GCSCLI_COPY_OPT} $1 $2
 }
+# Copy the specified file to Cloudflare R2.
+# arguments: 1. CLOUDFLARE_ACCOUNT_ID
+#            2. CLOUDFLARE_R2_ACCESS_KEY
+#			 3. CLOUDFLARE_R2_SECRET_KEY
+#			 4. Cloudflare R2 Bucket name CLOUDFLARE_R2_PUBLIC_BUCKET or CLOUDFLARE_R2_PRIVATE_BUCKET (ie: aiid-public)
+#			 5. File path to upload (ie: /tmp/backup-20231009233543.tar.bz2)
+#			 6. File key for the bucket item (ie: backup-20231009233543.tar.bz2)
 r2_copy_file() {
-	# echo "CLOUDFLARE_ACCOUNT_ID=$1 CLOUDFLARE_API_TOKEN=$2 ${WRANGLERCLI} r2 object put $3/$4 --file $5"
-	if [ $# -ne 5 ]; then return 255; fi
-	# CLOUDFLARE_ACCOUNT_ID=$1 CLOUDFLARE_API_TOKEN=$2 ${WRANGLERCLI} r2 object put $3/$4 --file $5
-
-	echo "python ${CLOUDFLARE_UPLOAD_SCRIPT} $1 $2 $3 $4 $5"
-	python3 ${CLOUDFLARE_UPLOAD_SCRIPT} $1 $2 $3 $4 $5
+	if [ $# -ne 6 ]; then return 255; fi
+	echo "python ${CLOUDFLARE_UPLOAD_SCRIPT} $1 $2 $3 $4 $5 $6"
+	python3 ${CLOUDFLARE_UPLOAD_SCRIPT} $1 $2 $3 $4 $5 $6
 }
 
 # Create current datetime string(YYYYmmddHHMMSS)

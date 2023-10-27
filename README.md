@@ -58,6 +58,8 @@ Environment variables
 | TARGET_PUBLIC_BUCKET_URL     | Target public Bucket URL ([s3://...\|gs://...]). **URL is needed to be end with '/'** | -       |
 | CLOUDFLARE_ACCOUNT_ID     | Cloudflare R2 account ID | -       |
 | CLOUDFLARE_API_TOKEN     | Cloudflare R2 token value | -       |
+| CLOUDFLARE_R2_ACCESS_KEY     | Cloudflare R2 Access Key ID | -       |
+| CLOUDFLARE_R2_SECRET_KEY     | Cloudflare R2 Access Secret ID | -       |
 | CLOUDFLARE_R2_PUBLIC_BUCKET     | Cloudflare R2 public bucket name (ie: "aiid-public") | -       |
 | CLOUDFLARE_R2_PRIVATE_BUCKET     | Cloudflare R2 private bucket name (ie: "aiid-private") | -       |
 
