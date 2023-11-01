@@ -40,8 +40,8 @@ gs_exists() {
 #            5. File path for the bucket item (ie: backup-20231009233543.tar.bz2)
 r2_exists() {
 	if [ $# -ne 5 ]; then return 255; fi
-	echo "python3 ${CLOUDFLARE_EXIST_OBJECT_SCRIPT} --account-id $1 --access-key $2 --secret-key $3 --bucket-name $4 --file-key $5"
-	python3 ${CLOUDFLARE_EXIST_OBJECT_SCRIPT} --account-id $1 --access-key $2 --secret-key $3 --bucket-name $4 --file-key $5
+	echo "python3 ${CLOUDFLARE_EXIST_OBJECT_SCRIPT} --account_id $1 --access_key $2 --secret_key $3 --bucket_name $4 --file_key $5"
+	python3 ${CLOUDFLARE_EXIST_OBJECT_SCRIPT} --account_id $1 --access_key $2 --secret_key $3 --bucket_name $4 --file_key $5
 }
 
 # Output the list of the files on specified S3 URL.
@@ -59,8 +59,8 @@ gs_list_files() {
 #            4. Cloudflare R2 Bucket name CLOUDFLARE_R2_PUBLIC_BUCKET or CLOUDFLARE_R2_PRIVATE_BUCKET (ie: aiid-public)
 r2_list_files() {
 	if [ $# -ne 4 ]; then return 255; fi
-	echo "python3 ${CLOUDFLARE_LIST_OBJECTS_SCRIPT} --account-id $1 --access-key $2 --secret-key $3 --bucket-name $4"
-	python3 ${CLOUDFLARE_LIST_OBJECTS_SCRIPT} --account-id $1 --access-key $2 --secret-key $3 --bucket-name $4
+	echo "python3 ${CLOUDFLARE_LIST_OBJECTS_SCRIPT} --account_id $1 --access_key $2 --secret_key $3 --bucket_name $4"
+	python3 ${CLOUDFLARE_LIST_OBJECTS_SCRIPT} --account_id $1 --access_key $2 --secret_key $3 --bucket_name $4
 }
 
 # Delete the specified file.
@@ -81,8 +81,8 @@ gs_delete_file() {
 #            5. File path for the bucket item (ie: backup-20231009233543.tar.bz2)
 r2_delete_file() {
 	if [ $# -ne 5 ]; then return 255; fi
-	echo "python3 ${CLOUDFLARE_DELETE_OBJECT_SCRIPT} --account-id $1 --access-key $2 --secret-key $3 --bucket-name $4 --file-key $5"
-	python3 ${CLOUDFLARE_DELETE_OBJECT_SCRIPT} --account-id $1 --access-key $2 --secret-key $3 --bucket-name $4 --file-key $5
+	echo "python3 ${CLOUDFLARE_DELETE_OBJECT_SCRIPT} --account_id $1 --access_key $2 --secret_key $3 --bucket_name $4 --file_key $5"
+	python3 ${CLOUDFLARE_DELETE_OBJECT_SCRIPT} --account_id $1 --access_key $2 --secret_key $3 --bucket_name $4 --file_key $5
 }
 
 # Copy the specified file.
@@ -112,8 +112,8 @@ gs_copy_file() {
 #			 6. File key for the bucket item (ie: backup-20231009233543.tar.bz2)
 r2_copy_file() {
 	if [ $# -ne 6 ]; then return 255; fi
-	echo "python3 ${CLOUDFLARE_UPLOAD_SCRIPT} --account-id $1 --access-key $2 --secret-key $3 --bucket-name $4 --file-path $5 --file-key $6"
-	python3 ${CLOUDFLARE_UPLOAD_SCRIPT} --account-id $1 --access-key $2 --secret-key $3 --bucket-name $4 --file-path $5 --file-key $6
+	echo "python3 ${CLOUDFLARE_UPLOAD_SCRIPT} --account_id $1 --access_key $2 --secret_key $3 --bucket_name $4 --file_path $5 --file_key $6"
+	python3 ${CLOUDFLARE_UPLOAD_SCRIPT} --account_id $1 --access_key $2 --secret_key $3 --bucket_name $4 --file_path $5 --file_key $6
 }
 
 # Create current datetime string(YYYYmmddHHMMSS)
