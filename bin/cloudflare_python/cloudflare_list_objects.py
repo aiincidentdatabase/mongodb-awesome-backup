@@ -1,13 +1,23 @@
-import sys
+import argparse
 import boto3
 import cloudflare_client
 
-R2_BUCKET_NAME = sys.argv[4]
+# Create the parser
+parser = argparse.ArgumentParser(description='List all objects in a Cloudflare R2 bucket')
 
-s3 = cloudflare_client.create_cloudflare_client(account_id=sys.argv[1], access_key=sys.argv[2], secret_key=sys.argv[3])
+# Add the arguments
+parser.add_argument('--account_id', required=True, help='Cloudflare account ID')
+parser.add_argument('--access_key', required=True, help='Cloudflare access key')
+parser.add_argument('--secret_key', required=True, help='Cloudflare secret key')
+parser.add_argument('--bucket_name', required=True, help='R2 bucket name')
+
+# Parse the arguments
+args = parser.parse_args()
+
+s3 = cloudflare_client.create_cloudflare_client(account_id=args.account_id, access_key=args.access_key, secret_key=args.secret_key)
 
 # List all objects in the R2 bucket
-response = s3.list_objects_v2(Bucket=R2_BUCKET_NAME)
+response = s3.list_objects_v2(Bucket=args.bucket_name)
 
 # Print the object keys
 for obj in response['Contents']:
