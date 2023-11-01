@@ -40,8 +40,8 @@ gs_exists() {
 #            5. File path for the bucket item (ie: backup-20231009233543.tar.bz2)
 r2_exists() {
 	if [ $# -ne 5 ]; then return 255; fi
-	echo "python3 ${CLOUDFLARE_EXIST_OBJECT_SCRIPT} --account_id $1 --access_key $2 --secret_key $3 --bucket_name $4 --file_key $5"
-	python3 ${CLOUDFLARE_EXIST_OBJECT_SCRIPT} --account_id $1 --access_key $2 --secret_key $3 --bucket_name $4 --file_key $5
+	echo "python3 ${CLOUDFLARE_EXIST_OBJECT_SCRIPT} --account_id $1 --access_key $2 --secret_key $3 --bucket_name $4 --file_path $5"
+	python3 ${CLOUDFLARE_EXIST_OBJECT_SCRIPT} --account_id $1 --access_key $2 --secret_key $3 --bucket_name $4 --file_path $5
 }
 
 # Output the list of the files on specified S3 URL.
@@ -81,8 +81,8 @@ gs_delete_file() {
 #            5. File path for the bucket item (ie: backup-20231009233543.tar.bz2)
 r2_delete_file() {
 	if [ $# -ne 5 ]; then return 255; fi
-	echo "python3 ${CLOUDFLARE_DELETE_OBJECT_SCRIPT} --account_id $1 --access_key $2 --secret_key $3 --bucket_name $4 --file_key $5"
-	python3 ${CLOUDFLARE_DELETE_OBJECT_SCRIPT} --account_id $1 --access_key $2 --secret_key $3 --bucket_name $4 --file_key $5
+	echo "python3 ${CLOUDFLARE_DELETE_OBJECT_SCRIPT} --account_id $1 --access_key $2 --secret_key $3 --bucket_name $4 --file_path $5"
+	python3 ${CLOUDFLARE_DELETE_OBJECT_SCRIPT} --account_id $1 --access_key $2 --secret_key $3 --bucket_name $4 --file_path $5
 }
 
 # Copy the specified file.
