@@ -30,7 +30,7 @@ jobs:
 
     steps:
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_S3_BACKUP_USER_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_S3_BACKUP_USER_SECRET_ACCESS_KEY }}
@@ -48,7 +48,8 @@ jobs:
             -e TARGET_PRIVATE_BUCKET_URL="${{ vars.AWS_S3_PRIVATE_BUCKET }}" \
             -e TARGET_PUBLIC_BUCKET_URL="${{ vars.AWS_S3_PUBLIC_BUCKET }}" \
             -e CLOUDFLARE_ACCOUNT_ID="${{ vars.CLOUDFLARE_ACCOUNT_ID }}" \
-            -e CLOUDFLARE_API_TOKEN="${{ secrets.CLOUDFLARE_API_TOKEN }}" \
+            -e CLOUDFLARE_R2_ACCESS_KEY="${{ secrets.CLOUDFLARE_R2_ACCESS_KEY }}" \
+            -e CLOUDFLARE_R2_SECRET_KEY="${{ secrets.CLOUDFLARE_R2_SECRET_KEY }}" \
             -e CLOUDFLARE_R2_PUBLIC_BUCKET="${{ vars.CLOUDFLARE_R2_PUBLIC_BUCKET }}" \
             -e CLOUDFLARE_R2_PRIVATE_BUCKET="${{ vars.CLOUDFLARE_R2_PRIVATE_BUCKET }}" \
             -e BACKUPFILE_PREFIX="backup" \

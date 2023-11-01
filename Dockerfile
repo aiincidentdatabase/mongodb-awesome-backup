@@ -14,8 +14,8 @@ RUN apk add --no-cache \
 # install awscli
 RUN pip install awscli
 
-# install wrangler (Cloudflare R2 cli)
-RUN npm install wrangler --global
+# install boto3
+RUN pip install boto3
 
 ENV AWS_DEFAULT_REGION=ap-northeast-1
 
