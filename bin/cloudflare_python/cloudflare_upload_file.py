@@ -23,5 +23,5 @@ with open(args.file_path, 'rb') as f:
     s3.upload_fileobj(f, args.bucket_name, args.file_key, ExtraArgs={'ContentType': 'application/x-bzip2'})
 
 print('-----------------------------')
-print('Successfully uploaded file ' + FILE_PATH + ' to R2 bucket ' + R2_BUCKET_NAME)
+print('Successfully uploaded file ' + args.file_path + ' to R2 bucket ' + args.bucket_name)
 print('-----------------------------')
