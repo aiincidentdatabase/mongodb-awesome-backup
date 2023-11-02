@@ -7,7 +7,9 @@ import boto3
 
 
 def parse_arguments():
-    parser = argparse.ArgumentParser(description="TODO")
+    parser = argparse.ArgumentParser(
+        description="Simple client for uploading, deleting, listing, and checking objects in Cloudlfare R2 buckets."
+    )
 
     parser.add_argument(
         "--operation",
@@ -18,15 +20,20 @@ def parse_arguments():
 
     # Arguments that are always required.
     parser.add_argument("--account_id", required=True, help="Cloudflare account ID")
-    parser.add_argument("--access_key", required=True, help="Cloudflare R2 bucket access key")
-    parser.add_argument("--secret_key", required=True, help="Cloudflare R2 bucket secret key")
-    parser.add_argument("--bucket_name", required=True, help="Cloudflare R2 bucket name")
+    parser.add_argument(
+        "--access_key", required=True, help="Cloudflare R2 bucket access key"
+    )
+    parser.add_argument(
+        "--secret_key", required=True, help="Cloudflare R2 bucket secret key"
+    )
+    parser.add_argument(
+        "--bucket_name", required=True, help="Cloudflare R2 bucket name"
+    )
 
     parser.add_argument(
         "--file_path",
         required=False,
         help="Path to the file to be uploaded or deleted.",
-        type=argparse.FileType("r"),
     )
     parser.add_argument(
         "--object_key",
@@ -75,13 +82,12 @@ def main(args):
                 print(obj["Key"], "size:", obj["Size"])
 
     elif args.operation == "upload":
-        with open(args.file_path, "rb") as f:
-            s3_client.upload_fileobj(
-                f,
-                args.bucket_name,
-                args.object_key,
-                ExtraArgs={"ContentType": "application/x-bzip2"},
-            )
+        s3_client.upload_file(
+            args.file_path,
+            args.bucket_name,
+            args.object_key,
+            ExtraArgs={"ContentType": "application/x-bzip2"},
+        )
         print("-----------------------------")
         print(
             f"Successfully uploaded file {args.file_path} (key: {args.object_key}) to bucket {args.bucket_name}"
@@ -102,7 +108,7 @@ def main(args):
 
     else:
         raise NotImplementedError
-    
+
     sys.exit()
 
 
