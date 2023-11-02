@@ -17,14 +17,26 @@ on:
 
 env:
   AWS_REGION: us-east-1                   # set this to your preferred AWS region, e.g. us-west-1
-  ECR_REPOSITORY: mongodb-awesome-backup  # set this to your Amazon ECR repository name
 
 defaults:
   run:
     shell: bash
 
 jobs:
-  backup-to-s3:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Build Docker
+        id: build-docker-image
+        run: |
+          docker build -t aiid-docker-backup:latest .
+
+  backup-to-buckets:
     name: Backup
     runs-on: ubuntu-latest
 
@@ -39,9 +51,6 @@ jobs:
       - name: Generate public and private backups
         id: build-image
         run: |
-          ls
-          pwd
-          ls -a
           docker run --rm \
             -e AWS_ACCESS_KEY_ID="${{ secrets.AWS_S3_BACKUP_USER_ACCESS_KEY_ID }}" \
             -e AWS_SECRET_ACCESS_KEY="${{ secrets.AWS_S3_BACKUP_USER_SECRET_ACCESS_KEY }}" \
@@ -63,5 +72,5 @@ jobs:
             -e MONGODB_AUTHDB="admin" \
             -e AWSCLI_ENDPOINT_OPT="" \
             -v ~:/mab \
-            public.ecr.aws/${{ vars.AWS_ECR_ID || 'd4w2c1x5'}}/mongodb-awesome-backup:latest
+            aiid-docker-backup:latest
 
