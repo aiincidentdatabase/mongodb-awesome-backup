@@ -23,8 +23,8 @@ defaults:
     shell: bash
 
 jobs:
-  build:
-    name: Build
+  build-and-run-backups:
+    name: Backup
     runs-on: ubuntu-latest
 
     steps:
@@ -42,12 +42,6 @@ jobs:
           load: true
           tags: aiid-docker-backup:latest
 
-  backup-to-buckets:
-    name: Backup
-    needs: build
-    runs-on: ubuntu-latest
-
-    steps:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -56,7 +50,6 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Generate public and private backups
-        id: run-backups
         run: |
           docker run --rm \
             -e AWS_ACCESS_KEY_ID="${{ secrets.AWS_S3_BACKUP_USER_ACCESS_KEY_ID }}" \
