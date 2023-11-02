@@ -38,6 +38,7 @@ jobs:
 
   backup-to-buckets:
     name: Backup
+    needs: build
     runs-on: ubuntu-latest
 
     steps:
