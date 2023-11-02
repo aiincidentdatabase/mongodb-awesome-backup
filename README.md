@@ -22,8 +22,8 @@ Usage
 docker run --rm \
   -e AWS_ACCESS_KEY_ID=<Your IAM Access Key ID> \
   -e AWS_SECRET_ACCESS_KEY=<Your IAM Secret Access Key> \
-  -e TARGET_PRIVATE_BUCKET_URL=<Target public Bucket URL ([s3://...|gs://...])> \
-  -e TARGET_PUBLIC_BUCKET_URL=<Target private Bucket URL ([s3://...|gs://...])> \
+  -e TARGET_PRIVATE_BUCKET_URL=<Target public Bucket URL (s3://...)> \
+  -e TARGET_PUBLIC_BUCKET_URL=<Target private Bucket URL (s3://...)> \
   -e CLOUDFLARE_ACCOUNT_ID=<Cloudflare R2 account ID> \
   -e CLOUDFLARE_R2_ACCESS_KEY=<Cloudflare R2 Access ID Key> \
   -e CLOUDFLARE_R2_SECRET_KEY=<Cloudflare R2 Access Secret Key> \
@@ -54,8 +54,8 @@ Environment variables
 | --------------------- | ------------------------------------------------------------------------------ | ------- |
 | AWS_ACCESS_KEY_ID     | Your IAM Access Key ID                                                         | -       |
 | AWS_SECRET_ACCESS_KEY | Your IAM Secret Access Key                                                     | -       |
-| TARGET_PRIVATE_BUCKET_URL     | Target private Bucket URL ([s3://...\|gs://...]). **URL is needed to be end with '/'** | -       |
-| TARGET_PUBLIC_BUCKET_URL     | Target public Bucket URL ([s3://...\|gs://...]). **URL is needed to be end with '/'** | -       |
+| TARGET_PRIVATE_BUCKET_URL     | Target private Bucket URL (s3://...). **URL is needed to be end with '/'** | -       |
+| TARGET_PUBLIC_BUCKET_URL     | Target public Bucket URL (s3://...). **URL is needed to be end with '/'** | -       |
 | CLOUDFLARE_ACCOUNT_ID     | Cloudflare R2 account ID | -       |
 | CLOUDFLARE_R2_ACCESS_KEY     | Cloudflare R2 Access Key ID | -       |
 | CLOUDFLARE_R2_SECRET_KEY     | Cloudflare R2 Access Secret ID | -       |

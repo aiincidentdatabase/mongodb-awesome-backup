@@ -14,9 +14,6 @@ do
     if [ `echo $TARGET_BUCKET_URL | cut -f1 -d":"` == "s3" ]; then
       echo "There are files below in '${TARGET_BUCKET_URL}' S3 bucket:"
       s3_list_files ${TARGET_BUCKET_URL}
-    elif [ `echo $TARGET_BUCKET_URL | cut -f1 -d":"` == "gs" ]; then
-      echo "There are files below in '${TARGET_BUCKET_URL}' GS bucket:"
-      gs_list_files ${TARGET_BUCKET_URL}
     fi
   fi
 done

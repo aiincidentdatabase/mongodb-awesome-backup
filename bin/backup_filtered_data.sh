@@ -6,13 +6,6 @@ echo "Starting backup_csv_data.sh script execution..."
 BACKUPFILE_PREFIX=${BACKUPFILE_PREFIX:-backup}
 MONGODB_HOST=${MONGODB_HOST:-mongo}
 CRONMODE=${CRONMODE:-false}
-#MONGODB_URI=
-#MONGODB_HOST=
-#MONGODB_DBNAME=
-#MONGODB_USERNAME=
-#MONGODB_PASSWORD=
-#MONGODB_AUTHDB=
-#TARGET_BUCKET_URL=[s3://... | gs://...] (must be ended with /)
 TARGET_BUCKET_URL=${TARGET_PUBLIC_BUCKET_URL}
 CLOUDFLARE_ACCOUNT_ID=${CLOUDFLARE_ACCOUNT_ID}
 
@@ -118,8 +111,6 @@ if [ "x${CLOUDFLARE_ACCOUNT_ID}" != "x" ]; then
 elif [ `echo $TARGET_BUCKET_URL | cut -f1 -d":"` == "s3" ]; then
   # transfer tarball to Amazon S3
   s3_copy_file ${TARBALL_FULLPATH} ${TARGET_BUCKET_URL}
-elif [ `echo $TARGET_BUCKET_URL | cut -f1 -d":"` == "gs" ]; then
-  gs_copy_file ${TARBALL_FULLPATH} ${TARGET_BUCKET_URL}
 fi
 
 # call healthchecks url for successful backup

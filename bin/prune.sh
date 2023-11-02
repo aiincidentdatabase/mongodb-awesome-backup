@@ -32,7 +32,5 @@ do
   echo "pruning ${TARGET_BUCKET_URL}"
   if [ `echo $TARGET_BUCKET_URL | cut -f1 -d":"` == "s3" ]; then
     s3_delete_file_if_delete_backup_day ${TARGET_BUCKET_URL}${TARBALL_PAST} ${DELETE_TARGET_DAYS_LEFT} ${DELETE_DEVIDE}
-  elif [ `echo $TARGET_BUCKET_URL | cut -f1 -d":"` == "gs" ]; then
-    gs_delete_file_if_delete_backup_day ${TARGET_BUCKET_URL}${TARBALL_PAST} ${DELETE_TARGET_DAYS_LEFT} ${DELETE_DEVIDE}
   fi
 done
