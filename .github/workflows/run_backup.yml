@@ -70,7 +70,6 @@ jobs:
             -e MONGODB_USERNAME="${{ secrets.MONGO_BACKUP_USER }}" \
             -e MONGODB_PASSWORD="${{ secrets.MONGO_BACKUP_USER_PASSWORD }}" \
             -e MONGODB_AUTHDB="admin" \
-            -e AWSCLI_ENDPOINT_OPT="" \
             -v ~:/mab \
             aiid-docker-backup:latest
 
