@@ -108,10 +108,6 @@ fi
 
 echo "Report contents are subject to their own intellectual property rights. Unless otherwise noted, the database is shared under (CC BY-SA 4.0). See: https://creativecommons.org/licenses/by-sa/4.0/" > ${TARGET}/license.txt
 
-ls -lah
-echo "---"
-ls -lah ${TARGET}
-
 # run tar command
 echo "Start backup ${TARGET} into ${TARGET_BUCKET_URL} ..."
 time ${TAR_CMD} ${TAR_OPTS} ${TARBALL_FULLPATH} -C ${DIRNAME} ${BASENAME}
