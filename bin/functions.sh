@@ -4,14 +4,6 @@ AWSCLI_COPY_OPT="s3 cp"
 AWSCLI_LIST_OPT="s3 ls"
 AWSCLI_DEL_OPT="s3 rm"
 AWSCLIOPT=${AWSCLIOPT:-}
-#AWSCLI_ENDPOINT_OPT=${AWSCLI_ENDPOINT_OPT:+"--endpoint-url ${AWSCLI_ENDPOINT_OPT}"}
-AWSCLI_ENDPOINT_OPT=""
-
-GCSCLI="/root/google-cloud-sdk/bin/gsutil"
-GCSCLI_COPY_OPT="cp"
-GCSCLI_LIST_OPT="ls"
-GCSCLI_DEL_OPT="rm"
-GCSCLIOPT=${GCSCLIOPT:-}
 
 CLOUDFLARE_S3_CLIENT_SCRIPT="./cloudflare_s3_operations.py"
 CLOUDFLARE_UPLOAD_SCRIPT="./cloudflare_python/cloudflare_upload_file.py"
@@ -27,17 +19,13 @@ DATE_CMD="/bin/date"
 # arguments: 1. s3 url (s3://.../...)
 s3_exists() {
 	if [ $# -ne 1 ]; then return 255; fi
-	${AWSCLI} ${AWSCLI_ENDPOINT_OPT} ${AWSCLIOPT} ${AWSCLI_LIST_OPT} $1 >/dev/null
-}
-gs_exists() {
-	if [ $# -ne 1 ]; then return 255; fi
-	${GCSCLI} ${GCSCLIOPT} ${GCSCLI_LIST_OPT} $1 >/dev/null
+	${AWSCLI} ${AWSCLIOPT} ${AWSCLI_LIST_OPT} $1 >/dev/null
 }
 # Check the existence of specified file on Cloudflare R2 bucket.
 # arguments: 1. CLOUDFLARE_ACCOUNT_ID
 #            2. CLOUDFLARE_R2_ACCESS_KEY
 #            3. CLOUDFLARE_R2_SECRET_KEY
-#            4. Cloudflare R2 Bucket name CLOUDFLARE_R2_PUBLIC_BUCKET or CLOUDFLARE_R2_PRIVATE_BUCKET (ie: aiid-public)
+#            4. Cloudflare R2 Bucket name (ie: aiid-public)
 #            5. File path for the bucket item (ie: backup-20231009233543.tar.bz2)
 r2_exists() {
 	if [ $# -ne 5 ]; then return 255; fi
@@ -48,16 +36,13 @@ r2_exists() {
 # Output the list of the files on specified S3 URL.
 # arguments: 1. s3 url (s3://...)
 s3_list_files() {
-	${AWSCLI} ${AWSCLI_ENDPOINT_OPT} ${AWSCLIOPT} ${AWSCLI_LIST_OPT} $1
-}
-gs_list_files() {
-	${GCSCLI} ${GCSCLIOPT} ${GCSCLI_LIST_OPT} $1
+	${AWSCLI} ${AWSCLIOPT} ${AWSCLI_LIST_OPT} $1
 }
 # Output the list of the files on specified Cloudflare R2.
 # arguments: 1. CLOUDFLARE_ACCOUNT_ID
 #            2. CLOUDFLARE_R2_ACCESS_KEY
 #            3. CLOUDFLARE_R2_SECRET_KEY
-#            4. Cloudflare R2 Bucket name CLOUDFLARE_R2_PUBLIC_BUCKET or CLOUDFLARE_R2_PRIVATE_BUCKET (ie: aiid-public)
+#            4. Cloudflare R2 Bucket name (ie: aiid-public)
 r2_list_files() {
 	if [ $# -ne 4 ]; then return 255; fi
 	echo "python3 ${CLOUDFLARE_S3_CLIENT_SCRIPT} --operation list --account_id $1 --access_key $2 --secret_key $3 --bucket_name $4"
@@ -68,17 +53,13 @@ r2_list_files() {
 # arguments: 1. s3 url (s3://.../...)
 s3_delete_file() {
 	if [ $# -ne 1 ]; then return 255; fi
-	${AWSCLI} ${AWSCLI_ENDPOINT_OPT} ${AWSCLIOPT} ${AWSCLI_DEL_OPT} $1
-}
-gs_delete_file() {
-	if [ $# -ne 1 ]; then return 255; fi
-	${GCSCLI} ${GCSCLIOPT} ${GCSCLI_DEL_OPT} $1
+	${AWSCLI} ${AWSCLIOPT} ${AWSCLI_DEL_OPT} $1
 }
 # Delete the specified file on Cloudflare R2 bucket.
 # arguments: 1. CLOUDFLARE_ACCOUNT_ID
 #            2. CLOUDFLARE_R2_ACCESS_KEY
 #            3. CLOUDFLARE_R2_SECRET_KEY
-#            4. Cloudflare R2 Bucket name CLOUDFLARE_R2_PUBLIC_BUCKET or CLOUDFLARE_R2_PRIVATE_BUCKET (ie: aiid-public)
+#            4. Cloudflare R2 Bucket name (ie: aiid-public)
 #            5. File path for the bucket item (ie: backup-20231009233543.tar.bz2)
 r2_delete_file() {
 	if [ $# -ne 5 ]; then return 255; fi
@@ -96,19 +77,15 @@ r2_delete_file() {
 #            1. source s3 url (s3://...)
 #            2. target s3 url (s3://...)
 s3_copy_file() {
-	echo ${AWSCLI} ${AWSCLI_ENDPOINT_OPT} ${AWSCLIOPT} ${AWSCLI_COPY_OPT} $1 $2
+	echo ${AWSCLI} ${AWSCLIOPT} ${AWSCLI_COPY_OPT} $1 $2
 	if [ $# -ne 2 ]; then return 255; fi
 	${AWSCLI} ${AWSCLI_ENDPOINT_OPT} ${AWSCLIOPT} ${AWSCLI_COPY_OPT} $1 $2
-}
-gs_copy_file() {
-	if [ $# -ne 2 ]; then return 255; fi
-	${GCSCLI} ${GCSCLIOPT} ${GCSCLI_COPY_OPT} $1 $2
 }
 # Copy the specified file to Cloudflare R2.
 # arguments: 1. CLOUDFLARE_ACCOUNT_ID
 #            2. CLOUDFLARE_R2_ACCESS_KEY
 #			 3. CLOUDFLARE_R2_SECRET_KEY
-#			 4. Cloudflare R2 Bucket name CLOUDFLARE_R2_PUBLIC_BUCKET or CLOUDFLARE_R2_PRIVATE_BUCKET (ie: aiid-public)
+#			 4. Cloudflare R2 Bucket name (ie: aiid-public)
 #			 5. File path to upload (ie: /tmp/backup-20231009233543.tar.bz2)
 #			 6. File key for the bucket item (ie: backup-20231009233543.tar.bz2)
 r2_copy_file() {
@@ -156,21 +133,10 @@ s3_delete_file_if_delete_backup_day() {
 		fi
 	fi
 }
-gs_delete_file_if_delete_backup_day() {
-	if [ $# -ne 3 ]; then return 255; fi
-	if check_is_delete_backup_day $2 $3; then
-		if gs_exists $1; then
-			gs_delete_file $1
-			echo "DELETED past backuped file on GS: $1"
-		else
-			echo "not found past backuped file on GS: $1"
-		fi
-	fi
-}
 # arguments: 1. CLOUDFLARE_ACCOUNT_ID
 #            2. CLOUDFLARE_R2_ACCESS_KEY
 #            3. CLOUDFLARE_R2_SECRET_KEY
-#            4. Cloudflare R2 Bucket name CLOUDFLARE_R2_PUBLIC_BUCKET or CLOUDFLARE_R2_PRIVATE_BUCKET (ie: aiid-public)
+#            4. Cloudflare R2 Bucket name (ie: aiid-public)
 #            5. File path for the bucket item (ie: backup-20231009233543.tar.bz2)
 #            6. how many days ago to be deleted
 #            7. divide number

@@ -1,11 +1,9 @@
-name: Backup to the cloud
+name: Public backup to the cloud
 
 on:
   push:
     branches:
       - master
-      - staging
-      - classifications-csv
   schedule:
     - cron: "0 10 * * 1" # At 10:00 on Monday.
   workflow_dispatch:
@@ -17,18 +15,31 @@ on:
 
 env:
   AWS_REGION: us-east-1                   # set this to your preferred AWS region, e.g. us-west-1
-  ECR_REPOSITORY: mongodb-awesome-backup  # set this to your Amazon ECR repository name
 
 defaults:
   run:
     shell: bash
 
 jobs:
-  backup-to-s3:
+  build-and-run-backups:
     name: Backup
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+  
+      - name: Build Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          load: true
+          tags: aiid-docker-backup:latest
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -36,13 +47,10 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_S3_BACKUP_USER_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: Generate public and private backups
-        id: build-image
+      - name: Generate public backup
         run: |
-          ls
-          pwd
-          ls -a
           docker run --rm \
+            -e IS_PUBLIC_BACKUP="true" \
             -e AWS_ACCESS_KEY_ID="${{ secrets.AWS_S3_BACKUP_USER_ACCESS_KEY_ID }}" \
             -e AWS_SECRET_ACCESS_KEY="${{ secrets.AWS_S3_BACKUP_USER_SECRET_ACCESS_KEY }}" \
             -e TARGET_PRIVATE_BUCKET_URL="${{ vars.AWS_S3_PRIVATE_BUCKET }}" \
@@ -50,8 +58,7 @@ jobs:
             -e CLOUDFLARE_ACCOUNT_ID="${{ vars.CLOUDFLARE_ACCOUNT_ID }}" \
             -e CLOUDFLARE_R2_ACCESS_KEY="${{ secrets.CLOUDFLARE_R2_ACCESS_KEY }}" \
             -e CLOUDFLARE_R2_SECRET_KEY="${{ secrets.CLOUDFLARE_R2_SECRET_KEY }}" \
-            -e CLOUDFLARE_R2_PUBLIC_BUCKET="${{ vars.CLOUDFLARE_R2_PUBLIC_BUCKET }}" \
-            -e CLOUDFLARE_R2_PRIVATE_BUCKET="${{ vars.CLOUDFLARE_R2_PRIVATE_BUCKET }}" \
+            -e CLOUDFLARE_R2_BUCKET="${{ vars.CLOUDFLARE_R2_PUBLIC_BUCKET }}" \
             -e BACKUPFILE_PREFIX="backup" \
             -e MONGODB_HOST="mongo" \
             -e MONGODB_URI="mongodb+srv://${{ secrets.MONGO_BACKUP_USER }}:${{ secrets.MONGO_BACKUP_USER_PASSWORD }}@aiiddev-aqdmh.gcp.mongodb.net/aiidprod" \
@@ -61,7 +68,6 @@ jobs:
             -e MONGODB_USERNAME="${{ secrets.MONGO_BACKUP_USER }}" \
             -e MONGODB_PASSWORD="${{ secrets.MONGO_BACKUP_USER_PASSWORD }}" \
             -e MONGODB_AUTHDB="admin" \
-            -e AWSCLI_ENDPOINT_OPT="" \
             -v ~:/mab \
-            public.ecr.aws/${{ vars.AWS_ECR_ID || 'd4w2c1x5'}}/mongodb-awesome-backup:latest
+            aiid-docker-backup:latest
 
